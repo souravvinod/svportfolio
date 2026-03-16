@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  (function () {
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      || window.innerWidth < 768;
+    if (isMobile) {
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.style.cssText = "margin:0;padding:0;background:#0b0b0f;font-family:'Syne',sans-serif;";
+        document.body.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2rem;position:relative;overflow:hidden;">
+            <div style="position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(200,255,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,0.03) 1px,transparent 1px);background-size:80px 80px;"></div>
+            <div style="position:fixed;bottom:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse at 50% 100%,rgba(200,255,0,0.08) 0%,transparent 60%);pointer-events:none;"></div>
+            <div style="position:relative;z-index:1;max-width:340px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#c8ff00;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:8px;">
+                <span style="width:6px;height:6px;background:#c8ff00;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>
+                Case Study
+              </div>
+              <div style="font-size:2.5rem;margin-bottom:20px;">🖥️</div>
+              <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.2rem;font-weight:400;color:#ffffff;line-height:1.2;margin-bottom:16px;">Best viewed<br>on <em>desktop</em></h1>
+              <p style="font-size:13px;color:#6b6b80;line-height:1.7;margin-bottom:32px;">This case study contains detailed visuals, prototypes, and layouts designed for a larger screen. Please open it on a PC or laptop for the full experience.</p>
+              <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:1px solid rgba(200,255,0,0.3);color:#c8ff00;text-decoration:none;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-family:'Syne',sans-serif;font-weight:500;border-radius:3px;background:rgba(200,255,0,0.05);">← Back to Portfolio</a>
+            </div>
+          </div>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Syne:wght@500&family=JetBrains+Mono:wght@400&display=swap');
+            @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+          </style>
+        `;
+      });
+    }
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGNYTE AI — UX Case Study · Sourav Vinod</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #f5f5f7;
+  --bg-2:       #ffffff;
+  --surface:    #fafafa;
+  --card:       #ffffff;
+  --border:     #e0e0e5;
+  --border-lt:  #ebebef;
+  --ink:        #1d1d1f;
+  --body:       #3d3d3f;
+  --muted:      #86868b;
+  --light:      #515154;
+  --blue:       #0071e3;
+  --blue-dim:   rgba(0,113,227,0.08);
+  --blue-border:rgba(0,113,227,0.2);
+  --teal:       #34c759;
+  --amber:      #ff9500;
+  --red:        #ff3b30;
+  --serif:      'Playfair Display', Georgia, serif;
+  --sans:       'IBM Plex Sans', sans-serif;
+  --mono:       'IBM Plex Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 52px;
+  background: rgba(245,245,247,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.nav-links { display: flex; gap: 28px; list-style: none; }
+
+.nav-links a {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active { color: var(--blue); }
+
+.nav-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--blue);
+  background: var(--blue-dim);
+  border: 1px solid var(--blue-border);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ===== CONTAINERS ===== */
+.container { max-width: 1000px; margin: 0 auto; padding: 0 48px; position: relative; }
+.container-wide { max-width: 1200px; margin: 0 auto; padding: 0 48px; position: relative; }
+
+/* ===== SECTIONS ===== */
+section { padding: 100px 0; }
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 16px;
+}
+
+.section-label::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: var(--blue);
+}
+
+section h2 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+section p { color: var(--light); font-size: 15px; line-height: 1.8; margin-top: 16px; }
+
+.divider { height: 1px; background: var(--border); margin: 56px 0; }
+
+/* ===== HERO ===== */
+#hero {
+  background: #0a0d14;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+#hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,113,227,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,113,227,0.04) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+}
+
+#hero::before {
+  content: '';
+  position: absolute;
+  top: -150px; left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 600px;
+  background: radial-gradient(ellipse, rgba(0,113,227,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  padding: 140px 48px 56px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hero-eyebrow-text {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0,113,227,0.8);
+}
+
+.hero-meta {
+  display: flex;
+  gap: 36px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fade-up 0.8s ease 0.1s forwards;
+}
+
+.meta-item { display: flex; flex-direction: column; gap: 3px; }
+.meta-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+.meta-value { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.85); }
+
+h1.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4.5vw, 60px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  max-width: 780px;
+  opacity: 0;
+  animation: fade-up 0.9s ease 0.2s forwards;
+}
+
+h1.hero-title em { font-style: italic; color: #4da3ff; }
+
+p.hero-subtitle {
+  font-size: 17px;
+  color: rgba(255,255,255,0.5);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-top: 20px;
+  opacity: 0;
+  animation: fade-up 0.9s ease 0.35s forwards;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-mockup-wrap {
+  position: relative;
+  z-index: 1;
+  padding: 0 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  opacity: 0;
+  animation: fade-up 1s ease 0.5s forwards;
+}
+
+.hero-mockup-frame {
+  background: #0f1520;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+.mockup-bar {
+  background: #0d1117;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 0 20px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mockup-dots { display: flex; gap: 6px; }
+.mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mockup-dot.r { background: #ff5f57; }
+.mockup-dot.y { background: #ffbd2e; }
+.mockup-dot.g { background: #28c840; }
+
+.mockup-url {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 5px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 6px;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.mockup-url-dot { width: 7px; height: 7px; border-radius: 50%; background: #34c759; flex-shrink: 0; }
+.mockup-url-text { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.3); }
+
+/* Dark theme dashboard inside hero */
+.dash {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  height: 440px;
+  overflow: hidden;
+}
+
+.dash-sidebar {
+  background: #0d1117;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  padding: 18px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-logo {
+  padding: 0 16px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 14px;
+}
+
+.dash-logo-icon {
+  width: 26px; height: 26px;
+  background: linear-gradient(135deg, #0071e3, #4da3ff);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: white;
+  font-family: var(--mono);
+}
+
+.dash-logo-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); }
+.dash-logo-sub { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+.dash-logo-mark { display: flex; align-items: center; gap: 8px; }
+
+.dash-nav-section { padding: 0 10px; margin-bottom: 6px; }
+.dash-nav-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); text-transform: uppercase; padding: 0 8px; margin-bottom: 4px; }
+
+.dash-nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 8px;
+  border-radius: 5px;
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.45);
+  cursor: pointer;
+  margin-bottom: 1px;
+}
+
+.dash-nav-item.active { background: rgba(0,113,227,0.15); color: #4da3ff; border: 1px solid rgba(0,113,227,0.2); }
+.dash-nav-icon { width: 13px; height: 13px; border-radius: 3px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+.icon-blue { background: rgba(0,113,227,0.3); }
+
+.dash-main { background: #0a0d14; display: flex; flex-direction: column; overflow: hidden; }
+
+.dash-topbar {
+  padding: 13px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.dash-topbar-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+.dash-topbar-actions { display: flex; gap: 7px; }
+
+.d-btn {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 10px; font-weight: 500;
+  cursor: pointer; border: none;
+  font-family: var(--sans);
+}
+
+.d-btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.4); }
+.d-btn-primary { background: #0071e3; color: white; }
+
+.dash-content { padding: 16px 20px; flex: 1; overflow: hidden; }
+
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.dash-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 7px;
+  padding: 12px;
+}
+
+.dash-stat-label { font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+.dash-stat-value { font-size: 20px; font-weight: 600; color: rgba(255,255,255,0.85); font-family: var(--mono); }
+.dash-stat-badge { font-size: 9px; font-weight: 500; margin-top: 3px; display: inline-block; padding: 2px 6px; border-radius: 3px; }
+.badge-blue { background: rgba(0,113,227,0.15); color: #4da3ff; border: 1px solid rgba(0,113,227,0.2); }
+.badge-teal { background: rgba(52,199,89,0.1); color: #34c759; border: 1px solid rgba(52,199,89,0.2); }
+.badge-amber { background: rgba(255,149,0,0.1); color: #ff9500; border: 1px solid rgba(255,149,0,0.2); }
+
+.dash-table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 5px;
+}
+
+.dash-table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  align-items: center;
+  margin-bottom: 3px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.row-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.8); }
+.row-sub { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+.row-count { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.55); }
+.row-bar-wrap { display: flex; flex-direction: column; gap: 3px; }
+.row-bar-label { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.4); display: flex; justify-content: space-between; }
+.row-bar { height: 3px; background: rgba(255,255,255,0.08); border-radius: 100px; overflow: hidden; }
+.row-bar-fill { height: 100%; border-radius: 100px; }
+.fill-blue { background: linear-gradient(90deg, #0071e3, #4da3ff); }
+.fill-teal { background: #34c759; }
+.fill-amber { background: #ff9500; }
+
+/* ===== OVERVIEW GRID ===== */
+#overview { background: var(--bg-2); border-bottom: 1px solid var(--border); }
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 48px;
+}
+
+.overview-cell {
+  background: var(--card);
+  padding: 28px 28px;
+}
+
+.ov-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.ov-value { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+
+/* ===== PROBLEM ===== */
+#problem { background: var(--bg); }
+
+.problem-statement {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  margin-top: 40px;
+  position: relative;
+}
+
+.problem-statement::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--red);
+  border-radius: 3px 0 0 3px;
+}
+
+.problem-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,59,48,0.07);
+  border: 1px solid rgba(255,59,48,0.18);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--red);
+  margin-bottom: 20px;
+}
+
+.problem-headline {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+
+.problem-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.problem-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+
+.problem-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.problem-card-text { font-size: 14px; color: var(--light); line-height: 1.6; }
+.problem-card-text strong { color: var(--ink); font-weight: 500; }
+
+/* ===== WORKFLOW BEFORE ===== */
+#workflow-before { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.workflow-steps-old {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  margin-top: 48px;
+  position: relative;
+}
+
+.workflow-steps-old::before {
+  content: '';
+  position: absolute;
+  top: 28px; left: 10%; right: 10%;
+  height: 1px;
+  background: var(--border);
+}
+
+.wf-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  position: relative;
+  padding: 0 12px;
+}
+
+.wf-node {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.wf-step-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+.wf-step-title { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.wf-step-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+.wf-pain {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.wf-pain-item {
+  background: rgba(255,59,48,0.04);
+  border: 1px solid rgba(255,59,48,0.12);
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-size: 13px;
+  color: var(--light);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pain-x { color: var(--red); font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+/* ===== RESEARCH ===== */
+#research { background: var(--bg); }
+
+.research-methods {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.method-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--light);
+}
+
+.method-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+
+.research-quote {
+  margin-top: 28px;
+  padding: 20px 24px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+  color: var(--light);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* ===== INSIGHTS ===== */
+#insights { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.insight-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.insight-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.insight-card:hover { border-color: var(--blue); box-shadow: 0 4px 20px rgba(0,113,227,0.08); }
+
+.insight-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--blue);
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.insight-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+.insight-text { font-size: 13px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ===== PRINCIPLES ===== */
+#principles { background: var(--bg); }
+
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.principle-card {
+  padding: 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.principle-card:hover { border-color: var(--blue); }
+
+.principle-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.principle-card:hover::before { opacity: 1; }
+
+.principle-icon { font-size: 22px; margin-bottom: 12px; display: block; }
+.principle-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.principle-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ===== DESIGN DECISIONS ===== */
+#decisions { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.decision-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.decision-header {
+  padding: 20px 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.decision-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--blue);
+  background: var(--blue-dim);
+  border: 1px solid var(--blue-border);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.decision-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+
+.decision-body {
+  padding: 20px 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.decision-col-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.decision-col-text { font-size: 14px; color: var(--light); line-height: 1.65; }
+
+.decision-col.impact .decision-col-label { color: var(--teal); }
+.decision-col.impact .decision-col-text { color: var(--ink); }
+
+/* ===== SCREENS ===== */
+#final-design { background: var(--bg); border-top: 1px solid var(--border); }
+
+.screen-block {
+  margin-top: 48px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.screen-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: var(--surface);
+}
+
+.screen-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--blue);
+  background: var(--blue-dim);
+  border: 1px solid var(--blue-border);
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+.screen-name { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.screen-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.screen-why { font-size: 12px; color: var(--blue); margin-top: 8px; font-weight: 500; }
+.screen-mockup { padding: 24px; background: #0a0d14; }
+
+/* Dark dashboard mockups */
+.rec-dashboard {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  height: 360px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0a0d14;
+}
+
+.rdb-sidebar {
+  background: #0d1117;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  padding: 14px 0;
+}
+
+.rdb-logo {
+  padding: 0 14px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 10px;
+}
+
+.rdb-logo-wrap { display: flex; align-items: center; gap: 7px; }
+.rdb-logo-icon {
+  width: 24px; height: 24px;
+  background: linear-gradient(135deg, #0071e3, #4da3ff);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 10px; font-weight: 700; color: white;
+}
+.rdb-logo-name { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); }
+
+.rdb-nav { padding: 0 8px; }
+.rdb-nav-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); padding: 0 6px; margin-bottom: 4px; margin-top: 8px; }
+.rdb-nav-item { display: flex; align-items: center; gap: 7px; padding: 5px 6px; border-radius: 5px; font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 1px; }
+.rdb-nav-item.active { background: rgba(0,113,227,0.15); color: #4da3ff; border: 1px solid rgba(0,113,227,0.15); }
+.rdb-icon { width: 11px; height: 11px; background: rgba(255,255,255,0.1); border-radius: 2px; flex-shrink: 0; }
+.rdb-icon.active-icon { background: rgba(0,113,227,0.4); }
+
+.rdb-main { background: #0a0d14; display: flex; flex-direction: column; }
+.rdb-topbar { padding: 11px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
+.rdb-topbar-title { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.rdb-actions { display: flex; gap: 7px; }
+.rdb-btn { padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 500; font-family: var(--sans); cursor: pointer; }
+.rdb-btn-sm-outline { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.35); }
+.rdb-btn-sm-blue { background: #0071e3; border: none; color: white; }
+
+.rdb-body { padding: 14px 18px; flex: 1; overflow: hidden; }
+.rdb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.rdb-stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 10px 12px; }
+.rdb-stat-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.3); margin-bottom: 4px; }
+.rdb-stat-val { font-family: var(--mono); font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.85); }
+.rdb-stat-badge { font-family: var(--mono); font-size: 9px; margin-top: 2px; display: inline-block; padding: 1px 5px; border-radius: 2px; }
+.rdb-roles-title { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 7px; }
+.rdb-role-list { display: flex; flex-direction: column; gap: 4px; }
+.rdb-role-item { display: grid; grid-template-columns: 2fr 80px 80px 65px; gap: 8px; padding: 7px 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; align-items: center; }
+.rdb-role-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.75); }
+.rdb-role-sub { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+.rdb-role-count { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.45); }
+.mini-bar { height: 3px; background: rgba(255,255,255,0.08); border-radius: 100px; overflow: hidden; margin-top: 3px; }
+.mini-fill { height: 100%; border-radius: 100px; }
+.mf-blue { background: linear-gradient(90deg, #0071e3, #4da3ff); }
+.mf-teal { background: #34c759; }
+.mf-amber { background: #ff9500; }
+
+/* Screen 2: Candidate Discovery */
+.cand-discovery {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 360px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cd-filters { background: #0d1117; border-right: 1px solid rgba(255,255,255,0.07); padding: 14px; }
+.cd-filters-title { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.cd-filter-group { margin-bottom: 12px; }
+.cd-filter-label { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 6px; }
+.cd-filter-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.cd-tag { font-size: 10px; padding: 3px 8px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; }
+.cd-tag.active { background: rgba(0,113,227,0.15); border-color: rgba(0,113,227,0.3); color: #4da3ff; }
+
+.cd-main { background: #0a0d14; padding: 14px; overflow: hidden; display: flex; flex-direction: column; gap: 8px; }
+.cd-search { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 7px 12px; margin-bottom: 2px; }
+.cd-search-icon { font-size: 11px; color: rgba(255,255,255,0.3); }
+.cd-search-text { font-size: 11px; color: rgba(255,255,255,0.3); flex: 1; }
+.cd-search-ai { font-family: var(--mono); font-size: 9px; color: #34c759; background: rgba(52,199,89,0.1); padding: 2px 6px; border-radius: 2px; }
+.cd-result-count { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.3); }
+.cd-candidate-list { display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+.cd-cand-card { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: flex-start; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 7px; padding: 10px 12px; }
+.cd-cand-card.highlighted { border-color: rgba(0,113,227,0.3); background: rgba(0,113,227,0.06); }
+.cand-avatar { width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.cand-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.cand-title { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 1px; }
+.cand-tags { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+.cand-tag { font-size: 9px; padding: 2px 5px; border-radius: 2px; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.4); }
+.match-score-wrap { text-align: right; flex-shrink: 0; }
+.match-label { font-size: 9px; color: rgba(255,255,255,0.3); margin-bottom: 2px; }
+.match-score { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+.score-high { color: #34c759; }
+.score-med { color: #4da3ff; }
+.score-low { color: #ff9500; }
+.match-ai-tag { font-family: var(--mono); font-size: 8px; color: #34c759; background: rgba(52,199,89,0.1); padding: 2px 5px; border-radius: 2px; margin-top: 3px; display: inline-block; }
+
+/* Screen 3: Candidate Profile */
+.cand-profile {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  height: 360px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cp-main { background: #0a0d14; padding: 18px; overflow: hidden; }
+.cp-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.cp-avatar { width: 40px; height: 40px; border-radius: 8px; background: rgba(0,113,227,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1px solid rgba(0,113,227,0.2); }
+.cp-name { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.85); }
+.cp-title { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+.cp-meta { display: flex; gap: 10px; margin-top: 4px; flex-wrap: wrap; }
+.cp-meta-item { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; }
+.cp-section-title { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px; margin-top: 14px; }
+.cp-competencies { display: flex; flex-direction: column; gap: 6px; }
+.cp-comp-item { display: flex; align-items: center; gap: 10px; }
+.cp-comp-label { font-size: 11px; color: rgba(255,255,255,0.5); width: 140px; flex-shrink: 0; }
+.cp-comp-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
+.cp-comp-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #0071e3, #4da3ff); }
+.cp-comp-score { font-family: var(--mono); font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); width: 28px; text-align: right; flex-shrink: 0; }
+
+.cp-sidebar { background: #0d1117; border-left: 1px solid rgba(255,255,255,0.07); padding: 16px; overflow: hidden; }
+.ai-insight-box { background: rgba(0,113,227,0.08); border: 1px solid rgba(0,113,227,0.15); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+.ai-insight-header { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+.ai-insight-dot { width: 5px; height: 5px; border-radius: 50%; background: #4da3ff; animation: pulse-dot 2s ease-in-out infinite; }
+.ai-insight-label { font-family: var(--mono); font-size: 9px; color: #4da3ff; text-transform: uppercase; letter-spacing: 0.1em; }
+.ai-insight-text { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+.cp-signal-list { display: flex; flex-direction: column; gap: 6px; }
+.cp-signal-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 5px; padding: 8px 10px; }
+.cp-signal-type { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 2px; }
+.cp-signal-value { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 500; }
+
+/* Pipeline */
+.pipeline-view {
+  background: #0a0d14;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pipeline-topbar {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pipeline-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.pipeline-role { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+
+.pipeline-stages {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+  padding: 16px;
+  gap: 10px;
+}
+
+.pipeline-stage { display: flex; flex-direction: column; gap: 6px; }
+.stage-top-bar { height: 2px; border-radius: 2px; margin-bottom: 4px; }
+.stb-gray { background: rgba(255,255,255,0.2); }
+.stb-blue { background: #0071e3; }
+.stb-teal { background: #34c759; }
+.stage-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.stage-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.55); }
+.stage-count { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; }
+.pipeline-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 5px; padding: 8px 10px; }
+.pipeline-card.active { border-color: rgba(0,113,227,0.3); background: rgba(0,113,227,0.06); }
+.pc-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.75); }
+.pc-title { font-size: 9px; color: rgba(255,255,255,0.35); margin-top: 1px; }
+.pc-score-row { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
+.pc-score { font-family: var(--mono); font-size: 11px; font-weight: 600; }
+.pc-dot { width: 6px; height: 6px; border-radius: 50%; }
+.pc-dot-blue { background: #0071e3; }
+.pc-dot-teal { background: #34c759; }
+.pc-dot-amber { background: #ff9500; }
+
+/* Collab */
+.collab-view {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  height: 360px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.collab-main { background: #0a0d14; padding: 16px; }
+.collab-header { margin-bottom: 14px; }
+.collab-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.collab-sub { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+.collab-cand-row { display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 0.8fr 0.3fr; gap: 10px; padding: 10px 12px; border-radius: 6px; align-items: center; margin-bottom: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+.cc-avatar { width: 28px; height: 28px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.cc-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.75); }
+.cc-role { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+.cc-status { font-size: 9px; padding: 2px 7px; border-radius: 3px; width: fit-content; font-family: var(--mono); }
+.status-shortlisted { background: rgba(0,113,227,0.15); color: #4da3ff; border: 1px solid rgba(0,113,227,0.2); }
+.status-review { background: rgba(255,149,0,0.1); color: #ff9500; border: 1px solid rgba(255,149,0,0.2); }
+.status-new { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.1); }
+.cc-score { font-family: var(--mono); font-size: 12px; font-weight: 600; }
+.cc-action { font-size: 12px; color: rgba(255,255,255,0.2); }
+
+.collab-sidebar { background: #0d1117; border-left: 1px solid rgba(255,255,255,0.07); padding: 16px; overflow: hidden; }
+.collab-sidebar-title { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.55); margin-bottom: 12px; }
+.collab-comment { margin-bottom: 12px; }
+.comment-header { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+.comment-avatar { width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; font-family: var(--mono); }
+.comment-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6); }
+.comment-time { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); margin-left: auto; }
+.comment-text { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.55; }
+
+/* AI Recs */
+.ai-recs {
+  background: #0a0d14;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ai-recs-topbar {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ai-recs-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 8px; }
+.ai-recs-sub { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.3); }
+.ai-pulse { width: 6px; height: 6px; border-radius: 50%; background: #4da3ff; animation: pulse-dot 2s ease-in-out infinite; }
+
+.ai-recs-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.ai-rec-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.ai-rec-card.top-match { border-color: rgba(0,113,227,0.3); background: rgba(0,113,227,0.05); }
+.ai-match-badge { font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 2px; display: inline-block; margin-bottom: 10px; }
+.badge-top { background: rgba(0,113,227,0.15); color: #4da3ff; border: 1px solid rgba(0,113,227,0.25); }
+.badge-strong { background: rgba(52,199,89,0.1); color: #34c759; border: 1px solid rgba(52,199,89,0.2); }
+.badge-potential { background: rgba(255,149,0,0.1); color: #ff9500; border: 1px solid rgba(255,149,0,0.2); }
+.ai-rec-score { margin-bottom: 10px; }
+.ai-rec-score-val { font-family: var(--mono); font-size: 28px; font-weight: 600; color: #4da3ff; line-height: 1; }
+.ai-rec-score-lbl { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.ai-rec-avatar { width: 36px; height: 36px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 8px; }
+.ai-rec-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 2px; }
+.ai-rec-title { font-size: 10px; color: rgba(255,255,255,0.35); margin-bottom: 10px; }
+.ai-signals { display: flex; flex-direction: column; gap: 4px; }
+.ai-signal-item { display: flex; align-items: flex-start; gap: 6px; font-size: 10px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+.ai-signal-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.2); flex-shrink: 0; margin-top: 4px; }
+
+/* ===== BEFORE / AFTER ===== */
+#before-after { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.ba-grid {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 0;
+  margin-top: 40px;
+  align-items: start;
+}
+
+.ba-col { }
+
+.ba-col-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.ba-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.ba-badge.before { background: rgba(255,59,48,0.08); color: var(--red); border: 1px solid rgba(255,59,48,0.15); }
+.ba-badge.after  { background: rgba(52,199,89,0.08); color: var(--teal); border: 1px solid rgba(52,199,89,0.15); }
+
+.ba-col-title { font-size: 13px; color: var(--muted); }
+
+.ba-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+
+.ba-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 13px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-lt);
+  border-radius: 0;
+}
+
+.ba-item:last-child { border-bottom: none; }
+
+.ba-col.after .ba-item { border-bottom-color: rgba(52,199,89,0.12); background: transparent; }
+
+.ba-item-dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700;
+  flex-shrink: 0; margin-top: 2px;
+}
+
+.ba-item-dot.neg { background: rgba(255,59,48,0.08); color: var(--red); }
+.ba-item-dot.pos { background: rgba(52,199,89,0.1); color: var(--teal); }
+
+.ba-item-text { font-size: 13px; color: var(--light); line-height: 1.65; }
+
+.ba-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+}
+
+.ba-arrow { font-size: 18px; color: var(--border); }
+
+/* ===== IMPACT ===== */
+#impact { background: var(--bg); }
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 40px;
+}
+
+.impact-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.impact-card:hover { border-color: var(--blue); box-shadow: 0 4px 24px rgba(0,113,227,0.08); }
+
+.impact-metric {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--blue);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.impact-metric-label { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+.impact-icon { font-size: 22px; margin-bottom: 10px; display: block; }
+.impact-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.impact-desc { font-size: 12px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ===== REFLECTION ===== */
+#reflections { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.reflection-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.reflection-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px;
+}
+
+.reflection-type {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--blue);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.reflection-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.reflection-text { font-size: 13px; color: var(--muted); line-height: 1.7; margin: 0; }
+
+.reflection-card.caution { border-color: rgba(255,149,0,0.2); background: rgba(255,149,0,0.02); }
+.reflection-card.caution .reflection-type { color: var(--amber); }
+
+/* ===== CONFIDENTIALITY ===== */
+.conf-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+}
+
+.conf-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.conf-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.conf-body { font-size: 13px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 24px 48px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-logo { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.footer-right { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .container, .container-wide { padding: 0 24px; }
+  section { padding: 64px 0; }
+  .hero-inner { padding: 120px 24px 40px; }
+  .hero-mockup-wrap { padding: 0 24px; }
+  .dash { grid-template-columns: 1fr; height: auto; }
+  .dash-sidebar { display: none; }
+  .overview-grid { grid-template-columns: 1fr 1fr; }
+  .workflow-steps-old { grid-template-columns: 1fr 1fr; }
+  .workflow-steps-old::before { display: none; }
+  .wf-pain { grid-template-columns: 1fr; }
+  .insight-cards { grid-template-columns: 1fr; }
+  .principles-grid { grid-template-columns: 1fr; }
+  .decision-body { grid-template-columns: 1fr; }
+  .ba-grid { grid-template-columns: 1fr; }
+  .ba-divider { display: none; }
+  .impact-grid { grid-template-columns: repeat(2, 1fr); }
+  .reflection-cards { grid-template-columns: 1fr; }
+  .cand-discovery { grid-template-columns: 1fr; height: auto; }
+  .cd-filters { display: none; }
+  .cand-profile { grid-template-columns: 1fr; height: auto; }
+  .cp-sidebar { display: none; }
+  .pipeline-stages { grid-template-columns: repeat(3, 1fr); }
+  .collab-view { grid-template-columns: 1fr; height: auto; }
+  .collab-sidebar { display: none; }
+  .ai-recs-body { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 8px; text-align: center; padding: 20px 24px; }
+  .nav-links { display: none; }
+}
+</style>
+<style>
+/* ============================================================
+   SHARED PORTFOLIO DESIGN SYSTEM — Sourav Vinod
+   Injected into all case study pages for visual consistency
+   ============================================================ */
+
+/* — Google Fonts (same as homepage) — */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* — Design tokens — */
+:root {
+  --sv-bg:          #0b0b0f;
+  --sv-surface:     #141419;
+  --sv-surface-2:   #1a1a22;
+  --sv-border:      rgba(255,255,255,0.06);
+  --sv-border-mid:  rgba(255,255,255,0.11);
+  --sv-accent:      #c8ff00;
+  --sv-accent-dim:  rgba(200,255,0,0.10);
+  --sv-accent-glow: rgba(200,255,0,0.05);
+  --sv-white:       #ffffff;
+  --sv-off-white:   #e8e8f0;
+  --sv-muted:       #6b6b80;
+  --sv-light:       #a0a0b8;
+  --sv-mono:        'JetBrains Mono', monospace;
+  --sv-sans:        'Syne', sans-serif;
+  --sv-display:     'Cormorant Garamond', Georgia, serif;
+  --sv-ease:        cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* — Shared Nav — */
+nav.sv-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+  height: 60px;
+  background: rgba(11,11,15,0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--sv-border);
+  font-family: var(--sv-mono);
+}
+
+.sv-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--sv-muted);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.sv-nav-back:hover { color: var(--sv-accent); }
+.sv-nav-back svg { transition: transform 0.2s; }
+.sv-nav-back:hover svg { transform: translateX(-3px); }
+
+.sv-nav-crumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--sv-muted);
+  letter-spacing: 0.06em;
+}
+.sv-nav-crumb-sep { color: rgba(255,255,255,0.15); }
+.sv-nav-crumb-cur { color: var(--sv-light); }
+
+.sv-nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.sv-nav-links a {
+  font-size: 11px;
+  color: var(--sv-muted);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.sv-nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--sv-accent);
+  transition: width 0.3s var(--sv-ease);
+}
+.sv-nav-links a:hover, .sv-nav-links a.active { color: var(--sv-white); }
+.sv-nav-links a:hover::after, .sv-nav-links a.active::after { width: 100%; }
+
+.sv-nav-tag {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--sv-accent);
+  background: var(--sv-accent-dim);
+  border: 1px solid rgba(200,255,0,0.25);
+  padding: 4px 12px;
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* — Shared Footer — */
+footer.sv-footer {
+  background: var(--sv-bg);
+  border-top: 1px solid var(--sv-border);
+  padding: 40px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--sv-mono);
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.sv-footer-left {
+  font-size: 11px;
+  color: var(--sv-muted);
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+.sv-footer-left strong { color: var(--sv-light); font-weight: 500; }
+
+.sv-footer-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sv-footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border: 1px solid var(--sv-border-mid);
+  border-radius: 2px;
+  font-family: var(--sv-mono);
+  font-size: 10px;
+  color: var(--sv-light);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.25s var(--sv-ease);
+  background: transparent;
+}
+.sv-footer-btn:hover {
+  border-color: var(--sv-accent);
+  color: var(--sv-accent);
+  background: var(--sv-accent-glow);
+}
+.sv-footer-btn.primary {
+  background: var(--sv-accent);
+  color: #0b0b0f;
+  border-color: var(--sv-accent);
+  font-weight: 600;
+}
+.sv-footer-btn.primary:hover {
+  background: #d4ff1a;
+  color: #0b0b0f;
+}
+
+/* — Progress bar on scroll — */
+.sv-progress-bar {
+  position: fixed;
+  top: 60px; left: 0;
+  height: 2px;
+  background: var(--sv-accent);
+  width: 0%;
+  z-index: 9998;
+  transition: width 0.05s linear;
+  box-shadow: 0 0 8px rgba(200,255,0,0.4);
+}
+
+/* — Noise overlay — */
+.sv-noise::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.4;
+}
+
+@media (max-width: 768px) {
+  nav.sv-nav { padding: 0 20px; }
+  .sv-nav-links { display: none; }
+  footer.sv-footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+}
+
+</style>
+<style>
+/* ── PORTFOLIO HARMONY OVERRIDES ── */
+/* Applied on top of existing page styles, no content changed */
+
+/* Override nav to dark */
+nav {
+  background: rgba(11,11,15,0.88) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+/* Footer dark override */
+footer {
+  background: #0b0b0f !important;
+  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  color: #6b6b80 !important;
+}
+footer a, footer .ft-btn { 
+  border-color: rgba(255,255,255,0.11) !important;
+  color: #a0a0b8 !important;
+}
+footer .ft-btn.primary, footer .sv-footer-btn.primary {
+  background: #c8ff00 !important;
+  color: #0b0b0f !important;
+  border-color: #c8ff00 !important;
+}
+footer strong { color: #e8e8f0 !important; }
+
+/* Scroll progress bar */
+#svProgress {
+  position: fixed;
+  top: 60px; left: 0;
+  height: 2px;
+  background: #c8ff00;
+  z-index: 9998;
+  box-shadow: 0 0 8px rgba(200,255,0,0.45);
+  transition: width 0.06s linear;
+}
+</style>
+</head>
+<body>
+
+<!-- UNIFIED NAV -->
+<div class="sv-progress-bar" id="svProgress"></div>
+<nav class="sv-nav">
+  <div style="display:flex;align-items:center;gap:14px">
+    <a class="sv-nav-back" href="index.html">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+      Portfolio
+    </a>
+    <span class="sv-nav-crumb-sep" style="font-family:var(--sv-mono);font-size:11px;color:rgba(255,255,255,0.15)">/</span>
+    <span class="sv-nav-crumb-cur" style="font-family:var(--sv-mono);font-size:11px;color:var(--sv-light);letter-spacing:0.06em">Ignyte AI</span>
+  </div>
+  <ul class="sv-nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#final-design">Design</a></li>
+    <li><a href="#impact">Impact</a></li>
+  </ul>
+  <span class="sv-nav-tag">IGNYTE AI</span>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero" style="padding-top:60px">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      <span class="hero-eyebrow-text">Kingsley Gate · IGNYTE AI · 2023–2024</span>
+    </div>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Role</span>
+        <span class="meta-value">Lead UX Designer</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Company</span>
+        <span class="meta-value">Kingsley Gate</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Platform</span>
+        <span class="meta-value">AI Recruiting Platform</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Team</span>
+        <span class="meta-value">PM · Engineers · Recruiters</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Duration</span>
+        <span class="meta-value">14 months</span>
+      </div>
+    </div>
+
+    <h1 class="hero-title">Designing an <em>AI-Powered</em> Recruiting Platform for High-Velocity Hiring</h1>
+    <p class="hero-subtitle">Helping recruiters identify, evaluate, and hire top candidates faster — using AI that shows its work.</p>
+  </div>
+
+  <div class="hero-mockup-wrap">
+    <div class="hero-mockup-frame">
+      <div class="mockup-bar">
+        <div class="mockup-dots">
+          <div class="mockup-dot r"></div>
+          <div class="mockup-dot y"></div>
+          <div class="mockup-dot g"></div>
+        </div>
+        <div class="mockup-url">
+          <div class="mockup-url-dot"></div>
+          <span class="mockup-url-text">ignyte.kingsleygate.com/dashboard</span>
+        </div>
+      </div>
+
+      <div class="dash">
+        <div class="dash-sidebar">
+          <div class="dash-logo">
+            <div class="dash-logo-mark">
+              <div class="dash-logo-icon">IG</div>
+              <div>
+                <div class="dash-logo-name">IGNYTE AI</div>
+                <div class="dash-logo-sub">Recruiting Intelligence</div>
+              </div>
+            </div>
+          </div>
+          <div class="dash-nav-section">
+            <div class="dash-nav-label">Overview</div>
+            <div class="dash-nav-item active"><div class="dash-nav-icon icon-blue"></div>Dashboard</div>
+            <div class="dash-nav-item"><div class="dash-nav-icon"></div>Open Roles</div>
+            <div class="dash-nav-item"><div class="dash-nav-icon"></div>Pipeline</div>
+          </div>
+          <div class="dash-nav-section">
+            <div class="dash-nav-label">Talent</div>
+            <div class="dash-nav-item"><div class="dash-nav-icon"></div>Candidate Discovery</div>
+            <div class="dash-nav-item"><div class="dash-nav-icon"></div>AI Recommendations</div>
+            <div class="dash-nav-item"><div class="dash-nav-icon"></div>Shortlists</div>
+          </div>
+          <div class="dash-nav-section">
+            <div class="dash-nav-label">Intelligence</div>
+            <div class="dash-nav-item"><div class="dash-nav-icon"></div>Profile Insights</div>
+            <div class="dash-nav-item"><div class="dash-nav-icon"></div>Reports</div>
+          </div>
+        </div>
+
+        <div class="dash-main">
+          <div class="dash-topbar">
+            <div class="dash-topbar-title">Recruiting Dashboard</div>
+            <div class="dash-topbar-actions">
+              <button class="d-btn d-btn-outline">Export</button>
+              <button class="d-btn d-btn-primary">+ New Search</button>
+            </div>
+          </div>
+
+          <div class="dash-content">
+            <div class="dash-stats">
+              <div class="dash-stat">
+                <div class="dash-stat-label">Active Roles</div>
+                <div class="dash-stat-value">18</div>
+                <span class="dash-stat-badge badge-blue">+3 this week</span>
+              </div>
+              <div class="dash-stat">
+                <div class="dash-stat-label">Candidates Reviewed</div>
+                <div class="dash-stat-value">342</div>
+                <span class="dash-stat-badge badge-teal">AI-ranked</span>
+              </div>
+              <div class="dash-stat">
+                <div class="dash-stat-label">Shortlisted</div>
+                <div class="dash-stat-value">47</div>
+                <span class="dash-stat-badge badge-teal">On track</span>
+              </div>
+              <div class="dash-stat">
+                <div class="dash-stat-label">Offers Pending</div>
+                <div class="dash-stat-value">6</div>
+                <span class="dash-stat-badge badge-amber">Review</span>
+              </div>
+            </div>
+
+            <div class="dash-table-header">
+              <div>Role</div><div>Candidates</div><div>Progress</div><div>AI Score</div><div>Status</div>
+            </div>
+            <div class="dash-table-row">
+              <div><div class="row-name">Chief Revenue Officer</div><div class="row-sub">Enterprise · New York</div></div>
+              <div class="row-count">84</div>
+              <div class="row-bar-wrap"><div class="row-bar-label"><span>Shortlisting</span><span>72%</span></div><div class="row-bar"><div class="row-bar-fill fill-blue" style="width:72%"></div></div></div>
+              <div class="row-count" style="color:#4da3ff;">9.2</div>
+              <span class="dash-stat-badge badge-blue">Active</span>
+            </div>
+            <div class="dash-table-row">
+              <div><div class="row-name">VP Engineering</div><div class="row-sub">Technology · San Francisco</div></div>
+              <div class="row-count">61</div>
+              <div class="row-bar-wrap"><div class="row-bar-label"><span>Interview</span><span>88%</span></div><div class="row-bar"><div class="row-bar-fill fill-teal" style="width:88%"></div></div></div>
+              <div class="row-count" style="color:#34c759;">9.7</div>
+              <span class="dash-stat-badge badge-teal">On Track</span>
+            </div>
+            <div class="dash-table-row">
+              <div><div class="row-name">Chief People Officer</div><div class="row-sub">Executive · Remote</div></div>
+              <div class="row-count">39</div>
+              <div class="row-bar-wrap"><div class="row-bar-label"><span>Screening</span><span>41%</span></div><div class="row-bar"><div class="row-bar-fill fill-amber" style="width:41%"></div></div></div>
+              <div class="row-count" style="color:#ff9500;">7.4</div>
+              <span class="dash-stat-badge badge-amber">Needs Attention</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECT OVERVIEW ===== -->
+<section id="overview">
+  <div class="container">
+    <span class="section-label">Project Overview</span>
+    <h2>What this project was about</h2>
+    <p style="max-width:600px;">IGNYTE AI is an internal recruiting intelligence platform built for Kingsley Gate, an executive search firm. The goal was simple: help recruiters find and evaluate the best candidates faster — without sacrificing the quality of their judgment.</p>
+
+    <div class="overview-grid">
+      <div class="overview-cell">
+        <div class="ov-label">Project</div>
+        <div class="ov-value">IGNYTE AI — Recruiting Intelligence Platform</div>
+      </div>
+      <div class="overview-cell">
+        <div class="ov-label">Company</div>
+        <div class="ov-value">Kingsley Gate (Executive Search Firm)</div>
+      </div>
+      <div class="overview-cell">
+        <div class="ov-label">My Role</div>
+        <div class="ov-value">Lead UX Designer — end to end, solo</div>
+      </div>
+      <div class="overview-cell">
+        <div class="ov-label">Timeline</div>
+        <div class="ov-value">2023 – 2024 (14 months)</div>
+      </div>
+      <div class="overview-cell">
+        <div class="ov-label">Team</div>
+        <div class="ov-value">1 PM · 3 Engineers · 2 Data Scientists · 2 Senior Recruiters</div>
+      </div>
+      <div class="overview-cell">
+        <div class="ov-label">Goal</div>
+        <div class="ov-value">Design an AI recruiting platform that helps recruiters identify the best candidates in minutes, not hours</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== THE PROBLEM ===== -->
+<section id="problem">
+  <div class="container">
+    <span class="section-label">The Problem</span>
+    <h2>Recruiters were drowning in manual work</h2>
+    <p style="max-width:620px;">Before IGNYTE AI, finding and evaluating candidates at Kingsley Gate was slow, fragmented, and exhausting. Recruiters had to rely on gut instinct and multiple disconnected tools — with no smart system to help them prioritise.</p>
+
+    <div class="problem-statement">
+      <div class="problem-time">⏱ 3–5 hours to review candidates for a single role</div>
+      <div class="problem-headline">Recruiters needed to identify the best candidates in minutes — not days of manual review.</div>
+      <p style="margin-top:0; font-size:14px; color:var(--light); line-height:1.75;">The existing process required opening multiple tools, reading hundreds of resumes from scratch, and making evaluation decisions with very little supporting data. There was no way to quickly know which candidates were worth deeper attention — and which could be safely deprioritised.</p>
+    </div>
+
+    <div class="problem-cards">
+      <div class="problem-card">
+        <div class="problem-dot"></div>
+        <div class="problem-card-text"><strong>Manual resume scanning</strong> — recruiters read hundreds of resumes one by one, with no prioritisation signal to guide where to start</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-dot"></div>
+        <div class="problem-card-text"><strong>Fragmented tools</strong> — candidate evaluation required switching between email, spreadsheets, LinkedIn, and an ATS that didn't talk to each other</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-dot"></div>
+        <div class="problem-card-text"><strong>AI with no explanation</strong> — existing AI recommendations just showed a score. Recruiters didn't trust what they couldn't understand</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-dot"></div>
+        <div class="problem-card-text"><strong>No side-by-side comparison</strong> — comparing two candidates meant jumping between separate screens, making it hard to make confident decisions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== OLD WORKFLOW ===== -->
+<section id="workflow-before">
+  <div class="container">
+    <span class="section-label">Workflow Before</span>
+    <h2>How recruiting worked before IGNYTE</h2>
+    <p style="max-width:580px;">To understand what needed to change, I mapped out the exact steps a recruiter had to go through just to build a shortlist. Each step was manual, slow, and fragmented.</p>
+
+    <div class="workflow-steps-old">
+      <div class="wf-step">
+        <div class="wf-node">📋</div>
+        <div class="wf-step-num">Step 01</div>
+        <div class="wf-step-title">Job posted</div>
+        <div class="wf-step-sub">Role requirements defined, search begins</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-node">🔍</div>
+        <div class="wf-step-num">Step 02</div>
+        <div class="wf-step-title">Manual database search</div>
+        <div class="wf-step-sub">Recruiter manually searches LinkedIn, ATS, referrals</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-node">📄</div>
+        <div class="wf-step-num">Step 03</div>
+        <div class="wf-step-title">Resume review one by one</div>
+        <div class="wf-step-sub">Hundreds of profiles read sequentially, no ranking</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-node">📊</div>
+        <div class="wf-step-num">Step 04</div>
+        <div class="wf-step-title">Manual comparison</div>
+        <div class="wf-step-sub">Candidates compared across multiple tabs and tools</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-node">📤</div>
+        <div class="wf-step-num">Step 05</div>
+        <div class="wf-step-title">Shortlist shared</div>
+        <div class="wf-step-sub">PDF or email sent to hiring partner — no structured feedback loop</div>
+      </div>
+    </div>
+
+    <div class="wf-pain">
+      <div class="wf-pain-item">
+        <div class="pain-x">✕</div>
+        <div>Fragmented tools meant recruiters lost time context-switching between platforms</div>
+      </div>
+      <div class="wf-pain-item">
+        <div class="pain-x">✕</div>
+        <div>Resume scanning was high-effort but low-accuracy — strong candidates with non-linear careers were often missed</div>
+      </div>
+      <div class="wf-pain-item">
+        <div class="pain-x">✕</div>
+        <div>No AI guidance meant decisions relied entirely on recruiter memory and intuition</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RESEARCH ===== -->
+<section id="research">
+  <div class="container">
+    <span class="section-label">Research</span>
+    <h2>Listening before designing</h2>
+    <p style="max-width:580px;">Understanding the real problem required spending time with the people actually doing the work — not just looking at the existing product. I ran four research methods across several weeks.</p>
+
+    <div class="research-methods">
+      <div class="method-pill"><div class="method-pill-dot"></div>8 Recruiter interviews</div>
+      <div class="method-pill"><div class="method-pill-dot"></div>12 hours of workflow observation</div>
+      <div class="method-pill"><div class="method-pill-dot"></div>3 live candidate search reviews</div>
+      <div class="method-pill"><div class="method-pill-dot"></div>Competitive audit — 6 ATS & sourcing tools</div>
+    </div>
+
+    <div class="research-quote">
+      We expected to find that recruiters needed better search filters. We were wrong. The core problem wasn't discovery — it was evaluation. Recruiters could find candidates; they couldn't confidently assess them at executive level. That single realisation reframed the entire product.
+    </div>
+
+    <p style="margin-top:24px; font-size:14px; color:var(--light);">Interviews revealed that the three things recruiters cared most about were: <strong style="color:var(--ink);">speed</strong> (get to good candidates faster), <strong style="color:var(--ink);">accuracy</strong> (trust the right signal, not just keyword matches), and <strong style="color:var(--ink);">trust in AI</strong> (only accept recommendations they could understand and verify).</p>
+  </div>
+</section>
+
+<!-- ===== KEY INSIGHTS ===== -->
+<section id="insights">
+  <div class="container">
+    <span class="section-label">Key Insights</span>
+    <h2>What research revealed</h2>
+    <p style="max-width:580px;">Five clear insights emerged from the research that directly shaped the design decisions I made.</p>
+
+    <div class="insight-cards">
+      <div class="insight-card">
+        <div class="insight-num">Insight 01</div>
+        <div class="insight-title">Ranked lists beat complex filters</div>
+        <div class="insight-text">Recruiters don't want to configure 15 filters. They want to open the platform and immediately see their strongest candidates at the top — sorted by relevance, not alphabetical order.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">Insight 02</div>
+        <div class="insight-title">AI only earns trust when it explains itself</div>
+        <div class="insight-text">When AI showed only a score, recruiters ignored it or actively pushed back. When it showed the signals behind the score — career trajectory, scope of past roles, growth rate — they immediately trusted it more.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">Insight 03</div>
+        <div class="insight-title">Comparison needs to happen in one place</div>
+        <div class="insight-text">Recruiters were jumping between tabs to compare candidates. Every context switch broke their train of thought. They needed to compare candidates side by side without leaving the platform.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">Insight 04</div>
+        <div class="insight-title">Signal clarity matters more than raw data</div>
+        <div class="insight-text">Showing more data didn't help — it overwhelmed. What recruiters actually needed was clarity: what is this candidate's strength, and why does it matter for this specific role?</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">Insight 05</div>
+        <div class="insight-title">Hiring managers were the hidden bottleneck</div>
+        <div class="insight-text">Hiring manager feedback was coming in via email and Slack — days late, unstructured, and hard to act on. Bringing that feedback loop inside the product was key to reducing shortlist rebuild time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DESIGN PRINCIPLES ===== -->
+<section id="principles">
+  <div class="container">
+    <span class="section-label">Design Principles</span>
+    <h2>From insights to principles</h2>
+    <p style="max-width:580px;">Each insight translated into a design principle that guided every decision — from information hierarchy to when to show or hide complexity.</p>
+
+    <div class="principles-grid">
+      <div class="principle-card">
+        <span class="principle-icon">🔍</span>
+        <div class="principle-name">AI transparency</div>
+        <div class="principle-desc">Never show a score without an explanation. Every AI recommendation must show the signals behind it — so recruiters can verify the reasoning and decide whether they agree. Applied on every screen that shows AI output.</div>
+      </div>
+      <div class="principle-card">
+        <span class="principle-icon">📐</span>
+        <div class="principle-name">Progressive disclosure</div>
+        <div class="principle-desc">Show the most important signal first — the AI match score. Make deeper details (competency breakdown, career signals, full profile) available on demand. Recruiters shouldn't have to work to get an overview.</div>
+      </div>
+      <div class="principle-card">
+        <span class="principle-icon">🧠</span>
+        <div class="principle-name">Reduce cognitive load</div>
+        <div class="principle-desc">Managing 300 candidates across 15 open roles is too complex to hold in one person's head. The design must do the prioritisation work — through ranked lists, clear status, and smart defaults — so recruiters can focus on decisions, not organisation.</div>
+      </div>
+      <div class="principle-card">
+        <span class="principle-icon">🤝</span>
+        <div class="principle-name">Contextual workflows</div>
+        <div class="principle-desc">Recruiters shouldn't have to leave the platform to evaluate, share, or get feedback on candidates. Discovery, evaluation, and collaboration all happen in one connected workspace — no more emailing PDFs or messaging over Slack.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DESIGN DECISIONS ===== -->
+<section id="decisions">
+  <div class="container">
+    <span class="section-label">Design Decisions</span>
+    <h2>Why I made each key design choice</h2>
+    <p style="max-width:600px;">The most important decisions weren't about visual style — they were about how to structure information and when to let AI lead versus when to let the recruiter lead.</p>
+
+    <div class="decision-block">
+      <div class="decision-header">
+        <span class="decision-num">Decision 01</span>
+        <div class="decision-title">AI-ranked lists instead of filter systems</div>
+      </div>
+      <div class="decision-body">
+        <div class="decision-col">
+          <div class="decision-col-label">Problem</div>
+          <div class="decision-col-text">Recruiters faced hundreds of unranked candidates with complex filter interfaces. Setting filters took time, required expertise, and still didn't surface the best candidates reliably.</div>
+        </div>
+        <div class="decision-col">
+          <div class="decision-col-label">Design Decision</div>
+          <div class="decision-col-text">Replace complex filter-first interfaces with an AI-ranked default. Candidates appear sorted by match score from the moment the recruiter opens a search. Filters are still available — but secondary, not the starting point.</div>
+        </div>
+        <div class="decision-col impact">
+          <div class="decision-col-label">Result</div>
+          <div class="decision-col-text">Recruiters immediately see their strongest candidates first. The time to reach a credible shortlist dropped significantly because they stopped wasting time on low-fit profiles at the bottom of a long list.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="decision-block">
+      <div class="decision-header">
+        <span class="decision-num">Decision 02</span>
+        <div class="decision-title">Score with visible signals, not just a number</div>
+      </div>
+      <div class="decision-body">
+        <div class="decision-col">
+          <div class="decision-col-label">Problem</div>
+          <div class="decision-col-text">Early prototypes showed a single aggregate match score per candidate. Recruiters rejected it immediately — they couldn't interrogate it, so they didn't trust it.</div>
+        </div>
+        <div class="decision-col">
+          <div class="decision-col-label">Design Decision</div>
+          <div class="decision-col-text">Show the signals that generate the score — leadership trajectory, career scope growth, decision-making style — alongside the overall number. Evidence comes first, score comes last.</div>
+        </div>
+        <div class="decision-col impact">
+          <div class="decision-col-label">Result</div>
+          <div class="decision-col-text">Once recruiters could see and verify the reasoning behind a score, adoption resistance dropped completely. Transparency was the feature — not the score itself.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="decision-block">
+      <div class="decision-header">
+        <span class="decision-num">Decision 03</span>
+        <div class="decision-title">One unified candidate profile instead of scattered tools</div>
+      </div>
+      <div class="decision-body">
+        <div class="decision-col">
+          <div class="decision-col-label">Problem</div>
+          <div class="decision-col-text">Candidate information lived across LinkedIn, the ATS, a spreadsheet, and email. Evaluating a single candidate required opening 4+ tabs and mentally combining everything.</div>
+        </div>
+        <div class="decision-col">
+          <div class="decision-col-label">Design Decision</div>
+          <div class="decision-col-text">Build a single profile view that combines resume data, AI competency signals, career insights, and hiring manager feedback — all in one screen, with a consistent structure.</div>
+        </div>
+        <div class="decision-col impact">
+          <div class="decision-col-label">Result</div>
+          <div class="decision-col-text">Recruiters could fully evaluate a candidate and move them to the next pipeline stage without leaving the profile page. Evaluation time per candidate dropped significantly.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCREENS ===== -->
+<section id="final-design">
+  <div class="container-wide">
+    <div class="container" style="padding:0 48px;">
+      <span class="section-label">Key Screens</span>
+      <h2>The platform — six screens, one workflow</h2>
+      <p style="max-width:560px; margin-top:16px;">Each screen solves a specific problem in the recruiter's day. Together they form a complete hiring workflow — from overview to offer.</p>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-block" style="margin-top:40px;">
+      <div class="screen-header">
+        <span class="screen-num">Screen 01</span>
+        <div>
+          <div class="screen-name">Recruiting Dashboard</div>
+          <div class="screen-desc">A single place to see all open roles, candidate pipeline progress, and AI scoring activity — so recruiters know exactly where to focus their day.</div>
+          <div class="screen-why">Why it exists: Recruiters were managing 15+ roles simultaneously with no overview. This screen gives them a clear, prioritised view of everything — without having to dig.</div>
+        </div>
+      </div>
+      <div class="screen-mockup">
+        <div class="rec-dashboard">
+          <div class="rdb-sidebar">
+            <div class="rdb-logo">
+              <div class="rdb-logo-wrap">
+                <div class="rdb-logo-icon">IG</div>
+                <div><div class="rdb-logo-name">IGNYTE AI</div></div>
+              </div>
+            </div>
+            <div class="rdb-nav">
+              <div class="rdb-nav-lbl">Overview</div>
+              <div class="rdb-nav-item active"><div class="rdb-icon active-icon"></div>Dashboard</div>
+              <div class="rdb-nav-item"><div class="rdb-icon"></div>Open Roles</div>
+              <div class="rdb-nav-item"><div class="rdb-icon"></div>Pipeline</div>
+              <div class="rdb-nav-lbl" style="margin-top:8px;">Talent</div>
+              <div class="rdb-nav-item"><div class="rdb-icon"></div>Discovery</div>
+              <div class="rdb-nav-item"><div class="rdb-icon"></div>AI Matches</div>
+              <div class="rdb-nav-item"><div class="rdb-icon"></div>Shortlists</div>
+              <div class="rdb-nav-lbl" style="margin-top:8px;">Intel</div>
+              <div class="rdb-nav-item"><div class="rdb-icon"></div>Insights</div>
+              <div class="rdb-nav-item"><div class="rdb-icon"></div>Reports</div>
+            </div>
+          </div>
+          <div class="rdb-main">
+            <div class="rdb-topbar">
+              <div class="rdb-topbar-title">Recruiting Dashboard</div>
+              <div class="rdb-actions">
+                <button class="rdb-btn rdb-btn-sm-outline">Export</button>
+                <button class="rdb-btn rdb-btn-sm-blue">+ New Search</button>
+              </div>
+            </div>
+            <div class="rdb-body">
+              <div class="rdb-stats">
+                <div class="rdb-stat"><div class="rdb-stat-lbl">Active Roles</div><div class="rdb-stat-val">18</div><span class="rdb-stat-badge badge-blue">+3 this week</span></div>
+                <div class="rdb-stat"><div class="rdb-stat-lbl">In Pipeline</div><div class="rdb-stat-val">342</div><span class="rdb-stat-badge badge-teal">AI-ranked</span></div>
+                <div class="rdb-stat"><div class="rdb-stat-lbl">Shortlisted</div><div class="rdb-stat-val">47</div><span class="rdb-stat-badge badge-teal">On track</span></div>
+                <div class="rdb-stat"><div class="rdb-stat-lbl">Offers Pending</div><div class="rdb-stat-val">6</div><span class="rdb-stat-badge badge-amber">Action</span></div>
+              </div>
+              <div class="rdb-roles-title">Active Role Searches</div>
+              <div class="rdb-role-list">
+                <div class="rdb-role-item">
+                  <div><div class="rdb-role-name">Chief Revenue Officer</div><div class="rdb-role-sub">Enterprise · New York</div></div>
+                  <div class="rdb-role-count">84 candidates</div>
+                  <div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:2px;display:flex;justify-content:space-between;font-family:var(--mono);"><span>Progress</span><span>72%</span></div><div class="mini-bar"><div class="mini-fill mf-blue" style="width:72%"></div></div></div>
+                  <span class="rdb-stat-badge badge-blue" style="font-size:9px;">Active</span>
+                </div>
+                <div class="rdb-role-item">
+                  <div><div class="rdb-role-name">VP Engineering</div><div class="rdb-role-sub">Technology · San Francisco</div></div>
+                  <div class="rdb-role-count">61 candidates</div>
+                  <div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:2px;display:flex;justify-content:space-between;font-family:var(--mono);"><span>Progress</span><span>88%</span></div><div class="mini-bar"><div class="mini-fill mf-teal" style="width:88%"></div></div></div>
+                  <span class="rdb-stat-badge badge-teal" style="font-size:9px;">On Track</span>
+                </div>
+                <div class="rdb-role-item">
+                  <div><div class="rdb-role-name">Chief People Officer</div><div class="rdb-role-sub">Executive · Remote</div></div>
+                  <div class="rdb-role-count">39 candidates</div>
+                  <div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:2px;display:flex;justify-content:space-between;font-family:var(--mono);"><span>Progress</span><span>41%</span></div><div class="mini-bar"><div class="mini-fill mf-amber" style="width:41%"></div></div></div>
+                  <span class="rdb-stat-badge badge-amber" style="font-size:9px;">Attention</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2 -->
+    <div class="screen-block">
+      <div class="screen-header">
+        <span class="screen-num">Screen 02</span>
+        <div>
+          <div class="screen-name">Candidate Discovery</div>
+          <div class="screen-desc">AI-powered search that shows candidates ranked by match score — not alphabetically. Filters available, but AI ranking is the default starting point.</div>
+          <div class="screen-why">Why it exists: Recruiters were starting from an unsorted pile. This screen solves that — the best-fit candidates are always at the top, immediately visible.</div>
+        </div>
+      </div>
+      <div class="screen-mockup">
+        <div class="cand-discovery">
+          <div class="cd-filters">
+            <div class="cd-filters-title">Filters <span style="font-size:9px;color:#4da3ff;background:rgba(0,113,227,0.15);padding:2px 6px;border-radius:2px;border:1px solid rgba(0,113,227,0.2);">4 active</span></div>
+            <div class="cd-filter-group">
+              <div class="cd-filter-label">Function</div>
+              <div class="cd-filter-tags"><div class="cd-tag active">Revenue</div><div class="cd-tag active">GTM</div><div class="cd-tag">Operations</div></div>
+            </div>
+            <div class="cd-filter-group">
+              <div class="cd-filter-label">Level</div>
+              <div class="cd-filter-tags"><div class="cd-tag active">C-Suite</div><div class="cd-tag active">VP</div><div class="cd-tag">Director</div></div>
+            </div>
+            <div class="cd-filter-group">
+              <div class="cd-filter-label">Company Stage</div>
+              <div class="cd-filter-tags"><div class="cd-tag">Startup</div><div class="cd-tag active">Scale-up</div><div class="cd-tag">Enterprise</div></div>
+            </div>
+          </div>
+          <div class="cd-main">
+            <div class="cd-search">
+              <span class="cd-search-icon">🔍</span>
+              <span class="cd-search-text">Search by name, company, role, or skills...</span>
+              <span class="cd-search-ai">AI-enhanced</span>
+            </div>
+            <div class="cd-result-count">184 candidates · sorted by AI match score</div>
+            <div class="cd-candidate-list">
+              <div class="cd-cand-card highlighted">
+                <div class="cand-avatar" style="background:rgba(0,113,227,0.15);border:1px solid rgba(0,113,227,0.2);">👤</div>
+                <div>
+                  <div class="cand-name">Sarah K.</div>
+                  <div class="cand-title">Former CRO · Series C SaaS · 8 years executive tenure</div>
+                  <div class="cand-tags"><span class="cand-tag">Revenue Growth</span><span class="cand-tag">Enterprise Sales</span><span class="cand-tag">GTM Leadership</span></div>
+                </div>
+                <div class="match-score-wrap">
+                  <div class="match-label">AI Match</div>
+                  <div class="match-score score-high">9.6</div>
+                  <div class="match-ai-tag">Top Match</div>
+                </div>
+              </div>
+              <div class="cd-cand-card">
+                <div class="cand-avatar" style="background:rgba(52,199,89,0.1);border:1px solid rgba(52,199,89,0.15);">👤</div>
+                <div>
+                  <div class="cand-name">James L.</div>
+                  <div class="cand-title">VP Sales → CRO · Enterprise Software · 12 years</div>
+                  <div class="cand-tags"><span class="cand-tag">P&L Ownership</span><span class="cand-tag">Team Scaling</span></div>
+                </div>
+                <div class="match-score-wrap">
+                  <div class="match-label">AI Match</div>
+                  <div class="match-score score-med">8.9</div>
+                  <div class="match-ai-tag">Strong</div>
+                </div>
+              </div>
+              <div class="cd-cand-card">
+                <div class="cand-avatar" style="background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.15);">👤</div>
+                <div>
+                  <div class="cand-name">Michelle R.</div>
+                  <div class="cand-title">Head of Revenue · Growth-stage · 6 years</div>
+                  <div class="cand-tags"><span class="cand-tag">PLG Motion</span><span class="cand-tag">RevOps</span></div>
+                </div>
+                <div class="match-score-wrap">
+                  <div class="match-label">AI Match</div>
+                  <div class="match-score score-low">7.3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3 -->
+    <div class="screen-block">
+      <div class="screen-header">
+        <span class="screen-num">Screen 03</span>
+        <div>
+          <div class="screen-name">Candidate Profile</div>
+          <div class="screen-desc">A single view combining work history, leadership competency signals, decision-making style, and AI insight — evidence first, final score last.</div>
+          <div class="screen-why">Why it exists: Recruiters used to open 4+ tabs to fully evaluate one candidate. This screen puts everything in one place — so evaluation is fast, focused, and confident.</div>
+        </div>
+      </div>
+      <div class="screen-mockup">
+        <div class="cand-profile">
+          <div class="cp-main">
+            <div class="cp-header">
+              <div class="cp-avatar">👤</div>
+              <div>
+                <div class="cp-name">Sarah K.</div>
+                <div class="cp-title">Chief Revenue Officer — Available for opportunities</div>
+                <div class="cp-meta">
+                  <span class="cp-meta-item">San Francisco, CA</span>
+                  <span class="cp-meta-item">Series C / Enterprise</span>
+                  <span class="cp-meta-item">8 yrs executive tenure</span>
+                </div>
+              </div>
+            </div>
+            <div class="cp-section-title">Leadership Competency Signals</div>
+            <div class="cp-competencies">
+              <div class="cp-comp-item"><span class="cp-comp-label">Strategic Vision</span><div class="cp-comp-bar"><div class="cp-comp-fill" style="width:94%"></div></div><span class="cp-comp-score">9.4</span></div>
+              <div class="cp-comp-item"><span class="cp-comp-label">Team Scaling</span><div class="cp-comp-bar"><div class="cp-comp-fill" style="width:91%"></div></div><span class="cp-comp-score">9.1</span></div>
+              <div class="cp-comp-item"><span class="cp-comp-label">Revenue Growth</span><div class="cp-comp-bar"><div class="cp-comp-fill" style="width:96%"></div></div><span class="cp-comp-score">9.6</span></div>
+              <div class="cp-comp-item"><span class="cp-comp-label">Board Presence</span><div class="cp-comp-bar"><div class="cp-comp-fill" style="width:85%"></div></div><span class="cp-comp-score">8.5</span></div>
+              <div class="cp-comp-item"><span class="cp-comp-label">Cross-functional Influence</span><div class="cp-comp-bar"><div class="cp-comp-fill" style="width:88%"></div></div><span class="cp-comp-score">8.8</span></div>
+            </div>
+            <div class="cp-section-title">Decision-making Style</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <span style="font-size:10px;padding:3px 9px;border-radius:3px;background:rgba(0,113,227,0.12);color:#4da3ff;border:1px solid rgba(0,113,227,0.2);">Data-informed</span>
+              <span style="font-size:10px;padding:3px 9px;border-radius:3px;background:rgba(52,199,89,0.1);color:#34c759;border:1px solid rgba(52,199,89,0.2);">Consensus builder</span>
+              <span style="font-size:10px;padding:3px 9px;border-radius:3px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.45);">Long-horizon</span>
+              <span style="font-size:10px;padding:3px 9px;border-radius:3px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.45);">Risk-aware</span>
+            </div>
+          </div>
+          <div class="cp-sidebar">
+            <div class="ai-insight-box">
+              <div class="ai-insight-header">
+                <div class="ai-insight-dot"></div>
+                <span class="ai-insight-label">AI Insight</span>
+              </div>
+              <p class="ai-insight-text">Sarah's career shows accelerating scope — each role 40–60% larger than the last. Strong operational discipline under hypergrowth conditions. Leadership trajectory: 9.4/10.</p>
+            </div>
+            <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Key Signals</div>
+            <div class="cp-signal-list">
+              <div class="cp-signal-item"><div class="cp-signal-type">Revenue Record</div><div class="cp-signal-value">0 → $120M ARR in 4 years</div></div>
+              <div class="cp-signal-item"><div class="cp-signal-type">Team Built</div><div class="cp-signal-value">Scaled sales org 8 → 140 people</div></div>
+              <div class="cp-signal-item"><div class="cp-signal-type">Overall Match Score</div><div class="cp-signal-value" style="color:#34c759;font-weight:600;font-family:var(--mono);">9.6 / 10</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4 -->
+    <div class="screen-block">
+      <div class="screen-header">
+        <span class="screen-num">Screen 04</span>
+        <div>
+          <div class="screen-name">Hiring Pipeline</div>
+          <div class="screen-desc">Visual pipeline showing every candidate's current stage — sourced, screened, interviewed, shortlisted, offer — with AI scores visible throughout.</div>
+          <div class="screen-why">Why it exists: Recruiters had no unified view of where all candidates stood. Spreadsheets were failing. This screen makes the entire funnel visible at a glance — for the whole team.</div>
+        </div>
+      </div>
+      <div class="screen-mockup">
+        <div class="pipeline-view">
+          <div class="pipeline-topbar">
+            <div>
+              <div class="pipeline-title">Hiring Pipeline</div>
+              <div class="pipeline-role">Chief Revenue Officer · New York · 84 candidates</div>
+            </div>
+            <div style="display:flex;gap:7px;">
+              <button class="rdb-btn rdb-btn-sm-outline">Filter</button>
+              <button class="rdb-btn rdb-btn-sm-blue">Add Candidate</button>
+            </div>
+          </div>
+          <div class="pipeline-stages">
+            <div class="pipeline-stage">
+              <div class="stage-top-bar stb-gray"></div>
+              <div class="stage-header"><span class="stage-name">Sourced</span><span class="stage-count">42</span></div>
+              <div class="pipeline-card"><div class="pc-name">Alex T.</div><div class="pc-title">Former VP Sales</div><div class="pc-score-row"><span class="pc-score" style="color:rgba(255,255,255,0.4);">7.1</span><div class="pc-dot pc-dot-amber"></div></div></div>
+              <div class="pipeline-card"><div class="pc-name">Priya N.</div><div class="pc-title">Commercial Director</div><div class="pc-score-row"><span class="pc-score" style="color:rgba(255,255,255,0.4);">7.4</span><div class="pc-dot pc-dot-blue"></div></div></div>
+            </div>
+            <div class="pipeline-stage">
+              <div class="stage-top-bar stb-blue"></div>
+              <div class="stage-header"><span class="stage-name">Screened</span><span class="stage-count">21</span></div>
+              <div class="pipeline-card active"><div class="pc-name">James L.</div><div class="pc-title">CRO · Enterprise SaaS</div><div class="pc-score-row"><span class="pc-score score-med">8.9</span><div class="pc-dot pc-dot-blue"></div></div></div>
+              <div class="pipeline-card"><div class="pc-name">Michelle R.</div><div class="pc-title">Head of Revenue</div><div class="pc-score-row"><span class="pc-score" style="color:rgba(255,255,255,0.6);">8.1</span><div class="pc-dot pc-dot-blue"></div></div></div>
+            </div>
+            <div class="pipeline-stage">
+              <div class="stage-top-bar stb-teal"></div>
+              <div class="stage-header"><span class="stage-name">Interviewed</span><span class="stage-count">11</span></div>
+              <div class="pipeline-card active"><div class="pc-name">Sarah K.</div><div class="pc-title">Former CRO</div><div class="pc-score-row"><span class="pc-score score-high">9.6</span><div class="pc-dot pc-dot-teal"></div></div></div>
+              <div class="pipeline-card"><div class="pc-name">Robert H.</div><div class="pc-title">VP Sales → CRO</div><div class="pc-score-row"><span class="pc-score" style="color:rgba(255,255,255,0.6);">9.0</span><div class="pc-dot pc-dot-blue"></div></div></div>
+            </div>
+            <div class="pipeline-stage">
+              <div class="stage-top-bar" style="background:#4da3ff;"></div>
+              <div class="stage-header"><span class="stage-name">Shortlisted</span><span class="stage-count">4</span></div>
+              <div class="pipeline-card active"><div class="pc-name">Sarah K.</div><div class="pc-title">Primary</div><div class="pc-score-row"><span class="pc-score score-high">9.6</span><div class="pc-dot pc-dot-teal"></div></div></div>
+              <div class="pipeline-card"><div class="pc-name">Robert H.</div><div class="pc-title">Alternate</div><div class="pc-score-row"><span class="pc-score" style="color:rgba(255,255,255,0.6);">9.0</span><div class="pc-dot pc-dot-blue"></div></div></div>
+            </div>
+            <div class="pipeline-stage">
+              <div class="stage-top-bar" style="background:#34c759;"></div>
+              <div class="stage-header"><span class="stage-name">Offer</span><span class="stage-count">1</span></div>
+              <div class="pipeline-card" style="border-color:rgba(52,199,89,0.25);background:rgba(52,199,89,0.04);"><div class="pc-name">Sarah K.</div><div class="pc-title">Offer Extended</div><div class="pc-score-row"><span class="pc-score" style="color:#34c759;">9.6</span><div style="width:6px;height:6px;border-radius:50%;background:#34c759;"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 5 -->
+    <div class="screen-block">
+      <div class="screen-header">
+        <span class="screen-num">Screen 05</span>
+        <div>
+          <div class="screen-name">Collaboration Workspace</div>
+          <div class="screen-desc">A shared workspace where recruiters and hiring managers review the same candidates, leave structured feedback, and align on decisions — all without leaving the platform.</div>
+          <div class="screen-why">Why it exists: Hiring manager feedback was arriving over email, days late, and impossible to act on. Moving collaboration inside the platform eliminated the biggest bottleneck in the hiring cycle.</div>
+        </div>
+      </div>
+      <div class="screen-mockup">
+        <div class="collab-view">
+          <div class="collab-main">
+            <div class="collab-header">
+              <div class="collab-title">Shortlist Review — Chief Revenue Officer</div>
+              <div class="collab-sub">4 candidates · 3 reviewers · Last updated 2 hours ago</div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1.2fr 0.8fr 0.8fr 0.3fr;gap:10px;padding:6px 12px;font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:8px;">
+              <div>Candidate</div><div>Status</div><div>AI Score</div><div>Avg Rating</div><div></div>
+            </div>
+            <div class="collab-cand-row">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="cc-avatar" style="background:rgba(0,113,227,0.12);">👤</div><div><div class="cc-name">Sarah K.</div><div class="cc-role">Former CRO · Series C SaaS</div></div></div>
+              <div class="cc-status status-shortlisted">Shortlisted</div>
+              <div class="cc-score" style="color:#34c759;">9.6</div>
+              <div class="cc-score" style="color:rgba(255,255,255,0.7);">★ 4.8</div>
+              <div class="cc-action">→</div>
+            </div>
+            <div class="collab-cand-row">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="cc-avatar" style="background:rgba(52,199,89,0.08);">👤</div><div><div class="cc-name">Robert H.</div><div class="cc-role">VP Sales → CRO · Enterprise</div></div></div>
+              <div class="cc-status status-review">In Review</div>
+              <div class="cc-score" style="color:#4da3ff;">9.0</div>
+              <div class="cc-score" style="color:rgba(255,255,255,0.7);">★ 4.3</div>
+              <div class="cc-action">→</div>
+            </div>
+            <div class="collab-cand-row">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="cc-avatar" style="background:rgba(255,149,0,0.08);">👤</div><div><div class="cc-name">James L.</div><div class="cc-role">CRO · Enterprise SaaS</div></div></div>
+              <div class="cc-status status-new">Pending</div>
+              <div class="cc-score" style="color:#4da3ff;">8.9</div>
+              <div class="cc-score" style="color:rgba(255,255,255,0.3);">Awaiting</div>
+              <div class="cc-action">→</div>
+            </div>
+          </div>
+          <div class="collab-sidebar">
+            <div class="collab-sidebar-title">Team Feedback — Sarah K.</div>
+            <div class="collab-comment">
+              <div class="comment-header">
+                <div class="comment-avatar" style="background:rgba(0,113,227,0.2);color:#4da3ff;">JB</div>
+                <span class="comment-name">J. Barnes</span>
+                <span class="comment-time">2h ago</span>
+              </div>
+              <p class="comment-text">Strong operational depth. The 0→$120M ARR trajectory is compelling. Recommend advancing to final round.</p>
+            </div>
+            <div class="collab-comment">
+              <div class="comment-header">
+                <div class="comment-avatar" style="background:rgba(52,199,89,0.1);color:#34c759;">MR</div>
+                <span class="comment-name">M. Reed</span>
+                <span class="comment-time">5h ago</span>
+              </div>
+              <p class="comment-text">Leadership style aligns well. Board experience is a strong differentiator for this role.</p>
+            </div>
+            <div class="collab-comment">
+              <div class="comment-header">
+                <div class="comment-avatar" style="background:rgba(255,149,0,0.1);color:#ff9500;">TK</div>
+                <span class="comment-name">T. Kim (HM)</span>
+                <span class="comment-time">1d ago</span>
+              </div>
+              <p class="comment-text">Healthcare IT background is a plus. Want to probe GTM strategy in final interview.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 6 -->
+    <div class="screen-block">
+      <div class="screen-header">
+        <span class="screen-num">Screen 06</span>
+        <div>
+          <div class="screen-name">AI Recommendations</div>
+          <div class="screen-desc">AI surfaces candidates who match based on leadership trajectory and career signals — including people who wouldn't appear in a standard keyword search.</div>
+          <div class="screen-why">Why it exists: Strong executive candidates often have non-linear careers that keyword matching misses entirely. This screen finds them using pattern recognition instead of text matching.</div>
+        </div>
+      </div>
+      <div class="screen-mockup">
+        <div class="ai-recs">
+          <div class="ai-recs-topbar">
+            <div class="ai-recs-title"><div class="ai-pulse"></div>AI Talent Recommendations</div>
+            <div class="ai-recs-sub">Updated 4 minutes ago · 3 new matches surfaced</div>
+          </div>
+          <div class="ai-recs-body">
+            <div class="ai-rec-card top-match">
+              <div class="ai-match-badge badge-top">TOP MATCH</div>
+              <div class="ai-rec-score">
+                <div class="ai-rec-score-val">9.8</div>
+                <div class="ai-rec-score-lbl">AI Score</div>
+              </div>
+              <div class="ai-rec-avatar" style="background:rgba(0,113,227,0.15);border:1px solid rgba(0,113,227,0.2);">👤</div>
+              <div class="ai-rec-name">Caroline S.</div>
+              <div class="ai-rec-title">CGO · FinTech · Not actively searching</div>
+              <div class="ai-signals">
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>Revenue scaled 5× in 3 years</div>
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>Board presentation experience</div>
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>Cross-industry CRO trajectory</div>
+              </div>
+            </div>
+            <div class="ai-rec-card">
+              <div class="ai-match-badge badge-strong">STRONG MATCH</div>
+              <div class="ai-rec-score">
+                <div class="ai-rec-score-val" style="color:#34c759;">9.3</div>
+                <div class="ai-rec-score-lbl">AI Score</div>
+              </div>
+              <div class="ai-rec-avatar" style="background:rgba(52,199,89,0.08);border:1px solid rgba(52,199,89,0.15);">👤</div>
+              <div class="ai-rec-name">David M.</div>
+              <div class="ai-rec-title">VP GTM → CRO Path · Enterprise SaaS</div>
+              <div class="ai-signals">
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>Rapid scope expansion pattern</div>
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>Multi-product go-to-market</div>
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>High leadership velocity score</div>
+              </div>
+            </div>
+            <div class="ai-rec-card">
+              <div class="ai-match-badge badge-potential">POTENTIAL</div>
+              <div class="ai-rec-score">
+                <div class="ai-rec-score-val" style="color:#ff9500;">8.4</div>
+                <div class="ai-rec-score-lbl">AI Score</div>
+              </div>
+              <div class="ai-rec-avatar" style="background:rgba(255,149,0,0.08);border:1px solid rgba(255,149,0,0.15);">👤</div>
+              <div class="ai-rec-name">Anita R.</div>
+              <div class="ai-rec-title">Head of Revenue · Scale-up · First-time CRO</div>
+              <div class="ai-signals">
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>High growth trajectory signal</div>
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>Strong coaching indicators</div>
+                <div class="ai-signal-item"><div class="ai-signal-dot"></div>Emerging executive pattern</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== BEFORE / AFTER ===== -->
+<section id="before-after">
+  <div class="container">
+    <span class="section-label">Before & After</span>
+    <h2>What changed</h2>
+    <p style="max-width:580px; margin-top:16px;">Every problem found in research maps directly to a design response in the platform. Here's the before and after, side by side.</p>
+
+    <div class="ba-grid">
+      <div class="ba-col">
+        <div class="ba-col-header">
+          <span class="ba-badge before">Before</span>
+          <span class="ba-col-title">What recruiters dealt with</span>
+        </div>
+        <ul class="ba-list">
+          <li class="ba-item">
+            <div class="ba-item-dot neg">✕</div>
+            <span class="ba-item-text">Recruiters read resumes one by one with no ranking — wasting 60–70% of their time on manual review with no prioritisation signal</span>
+          </li>
+          <li class="ba-item">
+            <div class="ba-item-dot neg">✕</div>
+            <span class="ba-item-text">Keyword matching produced weak shortlists — missing strong candidates with non-linear career paths that didn't match standard search terms</span>
+          </li>
+          <li class="ba-item">
+            <div class="ba-item-dot neg">✕</div>
+            <span class="ba-item-text">Hiring manager feedback arrived over Slack and email, days late and unstructured — causing shortlists to be rebuilt from scratch late in the process</span>
+          </li>
+          <li class="ba-item">
+            <div class="ba-item-dot neg">✕</div>
+            <span class="ba-item-text">No single view of the candidate pipeline — recruiters kept personal spreadsheets and regularly lost track of where candidates stood</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ba-divider">
+        <div class="ba-arrow">→</div>
+      </div>
+
+      <div class="ba-col after">
+        <div class="ba-col-header">
+          <span class="ba-badge after">After</span>
+          <span class="ba-col-title">How the platform responds</span>
+        </div>
+        <ul class="ba-list">
+          <li class="ba-item">
+            <div class="ba-item-dot pos">✓</div>
+            <span class="ba-item-text"><strong style="color:var(--ink);font-weight:500;">AI-ranked discovery</strong> surfaces the highest-fit candidates first — recruiters start with the strongest profiles, not a random pile</span>
+          </li>
+          <li class="ba-item">
+            <div class="ba-item-dot pos">✓</div>
+            <span class="ba-item-text"><strong style="color:var(--ink);font-weight:500;">AI Recommendations</strong> match candidates on career trajectory and leadership signals — not keyword density</span>
+          </li>
+          <li class="ba-item">
+            <div class="ba-item-dot pos">✓</div>
+            <span class="ba-item-text"><strong style="color:var(--ink);font-weight:500;">Collaboration workspace</strong> brings hiring manager feedback inside the platform, structured and tied directly to each candidate</span>
+          </li>
+          <li class="ba-item">
+            <div class="ba-item-dot pos">✓</div>
+            <span class="ba-item-text"><strong style="color:var(--ink);font-weight:500;">Hiring pipeline</strong> gives every team member a live, shared view of all candidate stages across every open role</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMPACT ===== -->
+<section id="impact">
+  <div class="container">
+    <span class="section-label">Impact</span>
+    <h2>What the platform achieved</h2>
+    <p style="max-width:560px; margin-top:16px;">The platform shifted recruiter time from manual review to high-value evaluation. Metrics below are directional estimates based on recruiter feedback and workflow observation during the project.</p>
+
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-metric">3×</div>
+        <div class="impact-metric-label">Faster candidate discovery</div>
+        <span class="impact-icon">⚡</span>
+        <div class="impact-title">Faster discovery</div>
+        <p class="impact-desc">AI-ranked lists reduced time from opening a search to reaching a credible shortlist — from days of reading to hours of evaluation.</p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-metric">↓60%</div>
+        <div class="impact-metric-label">Time on manual resume review</div>
+        <span class="impact-icon">📄</span>
+        <div class="impact-title">Less manual screening</div>
+        <p class="impact-desc">By surfacing pre-ranked candidates with competency signals, recruiters spent far less time reading full resumes at the top of the funnel.</p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-metric">100%</div>
+        <div class="impact-metric-label">Pipeline visibility across all roles</div>
+        <span class="impact-icon">🔭</span>
+        <div class="impact-title">Full pipeline transparency</div>
+        <p class="impact-desc">Every team member had a real-time view of candidate progress across all open roles — no more spreadsheet tracking or lost updates.</p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-metric">↓42%</div>
+        <div class="impact-metric-label">Late-stage shortlist rebuilds</div>
+        <span class="impact-icon">🤝</span>
+        <div class="impact-title">Fewer late-stage rebuilds</div>
+        <p class="impact-desc">Structured feedback in the shared workspace aligned hiring managers and recruiters earlier — reducing the costly shortlist rebuilds that used to add weeks to each search.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REFLECTION ===== -->
+<section id="reflections">
+  <div class="container">
+    <span class="section-label">Reflection</span>
+    <h2>What I learned from this project</h2>
+    <p style="max-width:560px; margin-top:16px;">Looking back, three lessons stand out — about AI, about trust, and about who you're actually designing for.</p>
+
+    <div class="reflection-cards">
+      <div class="reflection-card">
+        <div class="reflection-type">What worked well</div>
+        <div class="reflection-title">AI transparency was the real product</div>
+        <div class="reflection-text">The biggest design challenge wasn't the AI itself — it was trust. Recruiters didn't distrust scores because they were wrong. They distrusted them because they couldn't see why. Once we showed the underlying signals, adoption shifted completely. Transparency wasn't a feature we added on top — it was the core of the product.</div>
+      </div>
+      <div class="reflection-card">
+        <div class="reflection-type">What we got wrong early</div>
+        <div class="reflection-title">Too many signals overwhelmed instead of helped</div>
+        <div class="reflection-text">Early designs displayed every available AI signal at once. Recruiters felt overwhelmed and stopped trusting the platform. The fix was progressive disclosure — show the top-level match score first, and reveal the detailed signal breakdown only when the recruiter actively wants to go deeper. Less visible at once meant more understood.</div>
+      </div>
+      <div class="reflection-card">
+        <div class="reflection-type">What I would improve next</div>
+        <div class="reflection-title">Better explainability and bias auditing</div>
+        <div class="reflection-text">We designed responsible safeguards into the UI — manual override, signal transparency, human confirmation before any candidate advances. But the scoring model's training data was never formally audited for demographic bias during my involvement. If I were starting again, I'd push for that audit from day one. Responsible AI design has to go deeper than the interface.</div>
+      </div>
+      <div class="reflection-card caution">
+        <div class="reflection-type">The hidden insight</div>
+        <div class="reflection-title">Hiring managers were the bottleneck we almost missed</div>
+        <div class="reflection-text">Hiring managers weren't the primary users — but they were the decision-makers. Designing the collaboration workspace specifically around their review behaviour (not the recruiter's workflow) was the single change that most improved shortlist alignment speed. If you're designing a B2B tool, always ask: who else in the organisation needs to act for this product to succeed?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONFIDENTIALITY ===== -->
+<section id="confidentiality" style="padding:40px 0 80px;">
+  <div class="container">
+    <div class="conf-box">
+      <span class="conf-icon">🔒</span>
+      <div>
+        <div class="conf-title">Confidentiality Note</div>
+        <p class="conf-body">This case study presents work completed on IGNYTE AI, an internal recruiting intelligence platform developed at Kingsley Gate. Due to confidentiality agreements, certain UI visuals, candidate data, and specific metrics have been modified or recreated for demonstration purposes. All screens shown are conceptual recreations designed to illustrate design approach and system thinking.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="sv-footer">
+  <div class="sv-footer-left">
+    Case Study by <strong>Sourav Vinod</strong> &nbsp;·&nbsp; UX Designer &nbsp;·&nbsp; Kingsley Gate × IGNYTE AI
+  </div>
+  <div class="sv-footer-actions">
+    <a href="index.html" class="sv-footer-btn">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+      Back to Portfolio
+    </a>
+    <a href="mailto:souravvinod.ux@gmail.com" class="sv-footer-btn primary">Get in Touch →</a>
+  </div>
+</footer>
+
+<script>
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const sectionIds = Array.from(navLinks).map(a => a.getAttribute('href').replace('#',''));
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function updateNav() {
+    const scrollY = window.scrollY + 80;
+    let current = '';
+    sections.forEach(s => { if (s.offsetTop <= scrollY) current = s.id; });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+</script>
+
+<script>
+// Progress bar
+(function() {
+  const bar = document.getElementById('svProgress');
+  if (!bar) return;
+  function update() {
+    const h = document.documentElement;
+    const pct = (window.scrollY / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+// Nav active link highlight
+(function() {
+  const links = document.querySelectorAll('.sv-nav-links a');
+  const ids = Array.from(links).map(a => a.getAttribute('href').replace('#',''));
+  const secs = ids.map(id => document.getElementById(id)).filter(Boolean);
+  function highlight() {
+    const y = window.scrollY + 80;
+    let cur = '';
+    secs.forEach(s => { if (s.offsetTop <= y) cur = s.id; });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttri

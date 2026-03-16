@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  (function () {
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      || window.innerWidth < 768;
+    if (isMobile) {
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.style.cssText = "margin:0;padding:0;background:#0b0b0f;font-family:'Syne',sans-serif;";
+        document.body.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2rem;position:relative;overflow:hidden;">
+            <div style="position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(200,255,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,0.03) 1px,transparent 1px);background-size:80px 80px;"></div>
+            <div style="position:fixed;bottom:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse at 50% 100%,rgba(200,255,0,0.08) 0%,transparent 60%);pointer-events:none;"></div>
+            <div style="position:relative;z-index:1;max-width:340px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#c8ff00;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:8px;">
+                <span style="width:6px;height:6px;background:#c8ff00;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>
+                Case Study
+              </div>
+              <div style="font-size:2.5rem;margin-bottom:20px;">🖥️</div>
+              <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.2rem;font-weight:400;color:#ffffff;line-height:1.2;margin-bottom:16px;">Best viewed<br>on <em>desktop</em></h1>
+              <p style="font-size:13px;color:#6b6b80;line-height:1.7;margin-bottom:32px;">This case study contains detailed visuals, prototypes, and layouts designed for a larger screen. Please open it on a PC or laptop for the full experience.</p>
+              <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:1px solid rgba(200,255,0,0.3);color:#c8ff00;text-decoration:none;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-family:'Syne',sans-serif;font-weight:500;border-radius:3px;background:rgba(200,255,0,0.05);">← Back to Portfolio</a>
+            </div>
+          </div>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Syne:wght@500&family=JetBrains+Mono:wght@400&display=swap');
+            @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+          </style>
+        `;
+      });
+    }
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Authoring Platform — UX Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Lora:ital,wght@0,400;0,500;1,400;1,500&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface-raised: #f5f5f7;
+    --border: #d2d2d7;
+    --border-light: #e5e5e7;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #a1a1a6;
+    --blue: #0066cc;
+    --blue-light: #dae8f9;
+    --green: #1d8348;
+    --green-light: #d6eee3;
+    --amber: #9a6700;
+    --amber-light: #fef3cd;
+    --red-light: #fde8e6;
+    --radius-sm: 10px;
+    --radius: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --shadow-xs: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
+    --shadow: 0 2px 4px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--white);
+    color: var(--text-primary);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border-light);
+    height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+  }
+  .nav-brand {
+    font-size: 13px; font-weight: 500;
+    color: var(--text-secondary); letter-spacing: -0.01em;
+  }
+  .nav-brand strong { color: var(--text-primary); font-weight: 600; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    font-size: 13px; color: var(--text-secondary);
+    text-decoration: none; font-weight: 400;
+    transition: color 0.15s;
+    letter-spacing: -0.01em;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+  .container-wide { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+
+  /* ─── TYPE ─── */
+  .display { font-family: 'Lora', 'Georgia', serif; font-weight: 400; }
+  h1 { font-family: 'Lora', 'Georgia', serif; font-weight: 400; line-height: 1.08; letter-spacing: -0.03em; }
+  h2 { font-family: 'Lora', 'Georgia', serif; font-weight: 400; line-height: 1.12; letter-spacing: -0.025em; }
+  h3 { font-size: 19px; font-weight: 600; line-height: 1.3; letter-spacing: -0.02em; }
+  p { color: var(--text-secondary); line-height: 1.75; font-weight: 300; }
+  strong { font-weight: 600; color: var(--text-primary); }
+
+  .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 20px;
+  }
+  .eyebrow::before {
+    content: ''; display: block;
+    width: 20px; height: 1px; background: var(--text-tertiary);
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 140px 0 0;
+    background: var(--white);
+  }
+
+  .hero-meta {
+    display: flex; gap: 56px; margin-bottom: 52px;
+    flex-wrap: wrap; padding-top: 8px;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 8px; }
+  .meta-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary);
+  }
+  .meta-value { font-size: 15px; color: var(--text-secondary); font-weight: 400; }
+
+  .hero h1 { font-size: clamp(40px, 6vw, 76px); max-width: 860px; margin-bottom: 28px; }
+  .hero h1 em { font-style: italic; color: var(--blue); }
+  .hero-sub {
+    font-size: 21px; color: var(--text-secondary); max-width: 560px;
+    line-height: 1.55; font-weight: 300; margin-bottom: 72px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Hero summary strip */
+  .hero-summary {
+    display: grid; grid-template-columns: 1fr 1px 1fr;
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--shadow); margin-bottom: 24px;
+  }
+  .summary-col { padding: 28px 32px; }
+  .summary-divider { background: var(--border-light); }
+  .summary-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 12px;
+  }
+  .summary-item {
+    font-size: 14px; color: var(--text-secondary); font-weight: 400;
+    padding: 4px 0; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .summary-item::before { content: '—'; color: var(--border); flex-shrink: 0; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+  .tag {
+    border-radius: 100px; padding: 4px 12px;
+    font-size: 12px; font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .tag-blue { background: var(--blue-light); color: var(--blue); border-color: rgba(0,102,204,0.15); }
+  .tag-green { background: var(--green-light); color: var(--green); border-color: rgba(29,131,72,0.15); }
+  .tag-amber { background: var(--amber-light); color: var(--amber); border-color: rgba(154,103,0,0.15); }
+  .tag-gray { background: var(--surface-raised); color: var(--text-secondary); border-color: var(--border-light); }
+
+  /* Impact strip */
+  .impact-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--border-light);
+    border: 1px solid var(--border-light); border-radius: var(--radius);
+    overflow: hidden; margin-bottom: 64px;
+  }
+  .impact-strip-item {
+    background: var(--white); padding: 18px 20px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .strip-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    margin-top: 8px; flex-shrink: 0;
+  }
+  .strip-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; font-weight: 400; }
+
+  /* Hero screen */
+  .hero-screen {
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    background: #1c1c1e;
+    overflow: hidden;
+    box-shadow: 0 -2px 0 rgba(255,255,255,0.06) inset, 0 32px 80px rgba(0,0,0,0.22);
+    border: 1px solid rgba(255,255,255,0.06); border-bottom: none;
+    margin-top: 64px;
+  }
+  .screen-bar {
+    background: #2c2c2e; padding: 13px 20px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .screen-dots { display: flex; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .screen-url {
+    flex: 1; background: rgba(255,255,255,0.06); border-radius: 6px;
+    padding: 5px 12px; font-size: 11px; color: rgba(255,255,255,0.3);
+  }
+
+  /* ─── CMS DASHBOARD MOCKUP ─── */
+  .cms-shell { display: grid; grid-template-columns: 216px 1fr; height: 580px; font-size: 12px; }
+  .cms-sidebar {
+    background: #161618; padding: 20px 0;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+  .cms-sidebar-header {
+    padding: 0 16px 16px; font-size: 12px; font-weight: 700;
+    letter-spacing: -0.01em; color: rgba(255,255,255,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 8px;
+  }
+  .cms-nav-item {
+    padding: 8px 16px; color: rgba(255,255,255,0.45);
+    cursor: pointer; display: flex; align-items: center; gap: 10px;
+    font-size: 13px; transition: all 0.15s;
+  }
+  .cms-nav-item.active { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.07); }
+  .cms-nav-item svg { opacity: 0.7; flex-shrink: 0; }
+  .cms-nav-section {
+    margin-top: 16px; padding: 6px 16px 4px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(255,255,255,0.2);
+  }
+  .cms-main { background: #1c1c1e; padding: 28px; overflow: hidden; }
+  .cms-main-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  .cms-title { font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .cms-actions { display: flex; gap: 8px; }
+  .btn-ghost {
+    padding: 7px 14px; border-radius: 8px;
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.6); font-size: 12px; border: none; cursor: pointer;
+  }
+  .btn-primary {
+    padding: 7px 16px; border-radius: 8px;
+    background: #0a84ff; color: #fff;
+    font-size: 12px; font-weight: 500; border: none; cursor: pointer;
+  }
+  .launch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .launch-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 14px;
+  }
+  .launch-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .launch-card-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  .status-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 100px;
+  }
+  .tag-draft { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.45); }
+  .tag-review { background: rgba(255,149,0,0.15); color: #ff9500; }
+  .tag-approved { background: rgba(52,199,89,0.15); color: #34c759; }
+  .tag-scheduled { background: rgba(10,132,255,0.15); color: #0a84ff; }
+  .progress-bar-wrap { margin-bottom: 10px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 5px; }
+  .progress-track { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; }
+  .fill-blue { background: #0a84ff; }
+  .fill-amber { background: #ff9500; }
+  .fill-green { background: #34c759; }
+  .card-countdown { font-size: 10px; color: rgba(255,255,255,0.3); display: flex; align-items: center; gap: 5px; margin-top: 8px; }
+  .card-countdown strong { color: rgba(255,255,255,0.6); }
+  .team-avatars { display: flex; }
+  .avatar-mini {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1px solid #1c1c1e; margin-left: -4px;
+    font-size: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600;
+  }
+  .av1 { background: #5e5ce6; color: white; }
+  .av2 { background: #ff6961; color: white; }
+  .av3 { background: #30d158; color: #111; }
+  .av4 { background: #ffd60a; color: #111; }
+  .dashboard-bottom { display: grid; grid-template-columns: 1fr 260px; gap: 12px; }
+  .activity-feed {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 14px;
+  }
+  .activity-title { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
+  .activity-item { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot { width: 6px; height: 6px; border-radius: 50%; background: #0a84ff; margin-top: 5px; flex-shrink: 0; }
+  .activity-text { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.4; }
+  .activity-text strong { color: rgba(255,255,255,0.7); }
+  .activity-time { font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 2px; }
+  .launch-countdown-card {
+    background: rgba(10,132,255,0.08); border: 1px solid rgba(10,132,255,0.18);
+    border-radius: 12px; padding: 14px;
+  }
+  .countdown-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(10,132,255,0.8); margin-bottom: 12px; }
+  .countdown-time { display: flex; gap: 8px; }
+  .time-unit { text-align: center; flex: 1; }
+  .time-num { font-size: 22px; font-weight: 300; color: rgba(255,255,255,0.9); line-height: 1; }
+  .time-lbl { font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+  .time-sep { font-size: 18px; color: rgba(255,255,255,0.2); padding-top: 2px; }
+  .checklist-title { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 8px; }
+  .check-item { display: flex; gap: 8px; align-items: center; padding: 4px 0; font-size: 11px; }
+  .check-label { color: rgba(255,255,255,0.4); }
+  .check-label.done { color: rgba(255,255,255,0.6); text-decoration: line-through; }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 120px 0; }
+
+  .section-header { max-width: 680px; margin-bottom: 72px; }
+  .section-header h2 { font-size: clamp(32px, 4vw, 52px); margin-bottom: 20px; }
+  .section-header p { font-size: 19px; font-weight: 300; color: var(--text-secondary); }
+
+  /* ─── PROBLEM SECTION ─── */
+  .problem-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .problem-card {
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 36px 32px;
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow 0.2s;
+  }
+  .problem-card:hover { box-shadow: var(--shadow); }
+  .problem-num {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 14px;
+  }
+  .problem-card h3 { font-size: 18px; margin-bottom: 12px; font-family: inherit; font-weight: 600; color: var(--text-primary); }
+  .problem-card p { font-size: 15px; line-height: 1.7; }
+
+  /* ─── CONTEXT ─── */
+  .context-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .context-text p { margin-bottom: 20px; font-size: 17px; }
+
+  .workflow-card {
+    background: var(--surface-raised); border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg); padding: 36px;
+    box-shadow: var(--shadow-xs);
+  }
+  .workflow-card-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 24px;
+  }
+  .workflow-step-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 0; border-bottom: 1px solid var(--border-light);
+  }
+  .workflow-step-row:last-child { border-bottom: none; }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: var(--blue); color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-text { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+
+  /* ─── USERS ─── */
+  .persona-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .persona-card {
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 28px 24px;
+    box-shadow: var(--shadow-xs); transition: box-shadow 0.2s;
+  }
+  .persona-card:hover { box-shadow: var(--shadow); }
+  .persona-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+  }
+  .pi-blue { background: var(--blue-light); }
+  .pi-green { background: var(--green-light); }
+  .pi-amber { background: var(--amber-light); }
+  .pi-gray { background: var(--surface-raised); }
+  .persona-role {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 4px;
+  }
+  .persona-name { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary); }
+  .persona-section { margin-bottom: 14px; }
+  .persona-section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 7px;
+  }
+  .persona-list { list-style: none; }
+  .persona-list li {
+    font-size: 12px; color: var(--text-secondary); padding: 3px 0;
+    display: flex; gap: 6px; align-items: flex-start; font-weight: 400;
+  }
+  .persona-list li::before { content: '—'; color: var(--border); flex-shrink: 0; }
+
+  /* ─── INSIGHTS ─── */
+  .insights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .insight-card {
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 32px;
+    box-shadow: var(--shadow-xs); transition: box-shadow 0.2s;
+    display: grid; grid-template-columns: 28px 1fr; gap: 16px; align-items: flex-start;
+  }
+  .insight-card:hover { box-shadow: var(--shadow); }
+  .insight-num {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--blue); color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .insight-body {}
+  .insight-finding { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .insight-response { font-size: 14px; color: var(--text-secondary); line-height: 1.65; font-weight: 400; }
+  .insight-response-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 4px;
+  }
+
+  /* ─── DESIGN PRINCIPLES ─── */
+  .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .principle-card {
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 32px 28px;
+    box-shadow: var(--shadow-xs); transition: box-shadow 0.2s;
+  }
+  .principle-card:hover { box-shadow: var(--shadow); }
+  .principle-num {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 14px;
+  }
+  .principle-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; color: var(--text-primary); }
+  .principle-card p { font-size: 14px; line-height: 1.65; }
+
+  /* ─── SYSTEM ARCHITECTURE ─── */
+  .arch-wrapper {
+    background: var(--surface-raised); border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl); padding: 56px;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .arch-node {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--white); border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm); padding: 16px 24px;
+    width: 380px; box-shadow: var(--shadow-xs);
+    transition: box-shadow 0.2s;
+  }
+  .arch-node:hover { box-shadow: var(--shadow); }
+  .arch-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .ai-blue { background: var(--blue-light); }
+  .ai-green { background: var(--green-light); }
+  .ai-amber { background: var(--amber-light); }
+  .ai-gray { background: var(--surface-raised); }
+  .arch-node-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .arch-node-desc { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; font-weight: 400; }
+  .arch-arrow {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 6px 0; gap: 0;
+  }
+  .arch-line { width: 1px; height: 20px; background: var(--border-light); }
+  .arch-arrowhead { font-size: 9px; color: var(--text-tertiary); line-height: 1; }
+
+  /* ─── EXPLORATION ─── */
+  .exploration-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .exploration-card {
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-xs); transition: box-shadow 0.2s;
+  }
+  .exploration-card:hover { box-shadow: var(--shadow); }
+  .exploration-visual {
+    height: 240px; background: var(--surface-raised);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .exploration-visual > div { width: 100%; height: 100%; }
+  .wf-placeholder { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+  .wf-bar { height: 7px; background: var(--border-light); border-radius: 3px; }
+  .wf-box { background: var(--border-light); border-radius: 5px; }
+  .exploration-caption { padding: 20px 22px 22px; }
+  .exploration-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px;
+  }
+  .exploration-caption h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
+  .exploration-caption p { font-size: 13px; line-height: 1.65; }
+  /* Wireframe micro-text */
+  .wf-label { font-size: 7.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #a1a1a6; font-family: 'Inter', sans-serif; line-height: 1; }
+  .wf-value { font-size: 8px; color: #c7c7cc; font-family: 'Inter', sans-serif; line-height: 1; }
+
+  /* ─── SCREENS ─── */
+  .screens-section { background: var(--bg); }
+
+  .screen-intro { margin-bottom: 80px; }
+  .screen-intro h2 { font-size: clamp(30px, 4vw, 50px); margin-bottom: 16px; }
+  .screen-intro p { font-size: 19px; max-width: 520px; font-weight: 300; }
+
+  .screen-block { margin-bottom: 100px; }
+  .screen-block:last-child { margin-bottom: 0; }
+
+  .screen-narrative {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;
+    margin-bottom: 32px;
+  }
+  .narrative-col {}
+  .narrative-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .narrative-label::before { content: ''; display: block; width: 12px; height: 1px; background: var(--border); }
+  .narrative-col p { font-size: 15px; line-height: 1.7; color: var(--text-secondary); font-weight: 400; }
+  .screen-title { font-size: 26px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; letter-spacing: -0.02em; }
+  .screen-subtitle { font-size: 15px; color: var(--text-secondary); margin-bottom: 32px; font-weight: 400; }
+
+  .screen-frame {
+    background: #1c1c1e; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  }
+
+  /* ─── EDITOR MOCKUP ─── */
+  .editor-shell { display: grid; grid-template-columns: 256px 1fr 292px; height: 520px; font-size: 12px; }
+  .editor-sidebar-l {
+    background: #161618; border-right: 1px solid rgba(255,255,255,0.05); padding: 16px; overflow: hidden;
+  }
+  .ed-section-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.25); margin-bottom: 12px;
+  }
+  .spec-cat { margin-bottom: 14px; }
+  .spec-cat-label {
+    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.55);
+    padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.05);
+    margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .spec-field { padding: 4px 8px; }
+  .spec-field-name { font-size: 10px; color: rgba(255,255,255,0.28); margin-bottom: 2px; }
+  .spec-field-val { font-size: 11px; color: rgba(255,255,255,0.6); }
+  .editor-canvas { background: #1c1c1e; padding: 22px; overflow: hidden; }
+  .canvas-toolbar {
+    display: flex; gap: 3px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.04); border-radius: 8px;
+    padding: 5px; width: fit-content;
+  }
+  .toolbar-btn { padding: 5px 10px; border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.45); cursor: pointer; }
+  .toolbar-btn.active { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+  .content-block {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; padding: 13px; margin-bottom: 9px;
+  }
+  .block-label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 6px; }
+  .block-heading { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.85); }
+  .block-body { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+  .block-media {
+    height: 72px; background: rgba(255,255,255,0.04); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px dashed rgba(255,255,255,0.1); color: rgba(255,255,255,0.2); font-size: 11px;
+  }
+  .editor-sidebar-r { background: #161618; border-left: 1px solid rgba(255,255,255,0.05); padding: 16px; overflow: hidden; }
+  .preview-mini { background: #fff; border-radius: 8px; overflow: hidden; height: 190px; margin-bottom: 12px; }
+  .preview-hero-strip { height: 65px; background: linear-gradient(135deg, #1a1a2e, #16213e); display: flex; align-items: center; justify-content: center; }
+  .preview-hero-text { font-size: 10px; font-weight: 600; color: white; opacity: 0.8; }
+  .preview-body-strip { padding: 9px; }
+  .preview-line { height: 5px; background: #f0f0f0; border-radius: 3px; margin-bottom: 5px; }
+
+  /* ─── PAGE BUILDER MOCKUP ─── */
+  .builder-shell { display: grid; grid-template-columns: 212px 1fr 252px; height: 520px; font-size: 12px; }
+  .module-library { background: #161618; border-right: 1px solid rgba(255,255,255,0.05); padding: 16px; }
+  .module-item {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px; padding: 9px 12px; margin-bottom: 8px; cursor: pointer;
+  }
+  .module-item-name { font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500; }
+  .module-item-desc { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+  .builder-canvas {
+    background: #242426; padding: 18px; overflow: hidden;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .canvas-module {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px; padding: 13px; cursor: pointer; position: relative;
+  }
+  .canvas-module.selected { border-color: rgba(10,132,255,0.55); }
+  .canvas-module-label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 6px; }
+  .drag-handle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.15); font-size: 14px; }
+  .module-hero-preview { height: 38px; background: linear-gradient(90deg, rgba(10,132,255,0.2), rgba(10,132,255,0.05)); border-radius: 6px; }
+  .module-feature-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .feature-mini { height: 26px; background: rgba(255,255,255,0.05); border-radius: 4px; }
+  .module-specs-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .spec-mini-row { height: 16px; background: rgba(255,255,255,0.04); border-radius: 3px; }
+  .builder-inspector { background: #161618; border-left: 1px solid rgba(255,255,255,0.05); padding: 16px; }
+  .inspector-field { margin-bottom: 14px; }
+  .inspector-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 5px; }
+  .inspector-input {
+    width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 6px; padding: 7px 10px; color: rgba(255,255,255,0.7); font-size: 11px;
+  }
+  .inspector-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+  /* ─── ASSET MANAGER ─── */
+  .asset-shell { display: grid; grid-template-columns: 200px 1fr; height: 520px; font-size: 12px; }
+  .asset-sidebar { background: #161618; border-right: 1px solid rgba(255,255,255,0.05); padding: 16px; }
+  .asset-filter-item {
+    padding: 8px 10px; border-radius: 7px; color: rgba(255,255,255,0.45);
+    cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .asset-filter-item.active { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.85); }
+  .asset-count { font-size: 10px; color: rgba(255,255,255,0.2); }
+  .asset-main { background: #1c1c1e; padding: 22px; overflow: hidden; }
+  .asset-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; justify-content: space-between; }
+  .asset-search {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 8px; padding: 6px 12px; font-size: 11px; color: rgba(255,255,255,0.4);
+    width: 200px;
+  }
+  .asset-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .asset-thumb {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; overflow: hidden; cursor: pointer;
+  }
+  .asset-thumb.selected { border-color: rgba(10,132,255,0.6); }
+  .asset-img { height: 70px; background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .asset-name { padding: 6px 8px; font-size: 9px; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ─── PUBLISHING WORKFLOW ─── */
+  .publish-shell { display: grid; grid-template-columns: 1fr 320px; height: 520px; font-size: 12px; }
+  .publish-main { background: #1c1c1e; padding: 26px; overflow: hidden; }
+  .publish-pipeline { display: flex; flex-direction: column; gap: 0; }
+  .pipeline-stage {
+    display: flex; align-items: stretch; gap: 0;
+    border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden;
+    margin-bottom: 10px; background: rgba(255,255,255,0.03);
+  }
+  .stage-bar { width: 4px; flex-shrink: 0; }
+  .sb-green { background: #34c759; }
+  .sb-blue { background: #0a84ff; }
+  .sb-amber { background: #ff9500; }
+  .sb-gray { background: rgba(255,255,255,0.12); }
+  .stage-content { flex: 1; padding: 12px 14px; }
+  .stage-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+  .stage-meta { font-size: 10px; color: rgba(255,255,255,0.3); display: flex; align-items: center; gap: 8px; }
+  .stage-badge { padding: 2px 7px; border-radius: 100px; font-size: 9px; font-weight: 600; }
+  .sb-tag-done { background: rgba(52,199,89,0.15); color: #34c759; }
+  .sb-tag-active { background: rgba(10,132,255,0.15); color: #0a84ff; }
+  .sb-tag-pending { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.35); }
+  .publish-sidebar { background: #161618; border-left: 1px solid rgba(255,255,255,0.05); padding: 18px; }
+  .publish-stat { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .publish-stat:last-child { border-bottom: none; }
+  .publish-stat-label { font-size: 10px; color: rgba(255,255,255,0.28); margin-bottom: 4px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; }
+  .publish-stat-val { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 500; }
+
+  /* ─── IMPACT ─── */
+  .impact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .impact-card {
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 36px 32px;
+    box-shadow: var(--shadow-xs); transition: box-shadow 0.2s;
+  }
+  .impact-card:hover { box-shadow: var(--shadow); }
+  .impact-icon { font-size: 28px; margin-bottom: 18px; }
+  .impact-headline { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; letter-spacing: -0.01em; }
+  .impact-desc { font-size: 15px; line-height: 1.7; }
+
+  /* ─── REFLECTION ─── */
+  .reflection-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .reflection-card {
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 32px;
+    box-shadow: var(--shadow-xs); transition: box-shadow 0.2s;
+  }
+  .reflection-card:hover { box-shadow: var(--shadow); }
+  .reflection-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 14px;
+  }
+  .reflection-card p { font-size: 15px; line-height: 1.75; color: var(--text-secondary); font-weight: 400; }
+
+  /* ─── ROLE ─── */
+  .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .role-col-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px;
+  }
+  .role-title-big { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .role-tag {
+    display: inline-block; background: var(--blue-light); color: var(--blue);
+    border: 1px solid rgba(0,102,204,0.15); border-radius: 100px;
+    padding: 4px 14px; font-size: 12px; font-weight: 500;
+  }
+  .responsibility-list { list-style: none; margin-top: 4px; }
+  .responsibility-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 16px 0; border-bottom: 1px solid var(--border-light);
+    font-size: 15px; color: var(--text-secondary); line-height: 1.65; font-weight: 400;
+  }
+  .responsibility-list li:last-child { border-bottom: none; }
+  .resp-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ─── FINAL WORKFLOW ─── */
+  .fw-grid {
+    display: flex; gap: 0; align-items: center;
+    background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs);
+  }
+  .fw-step { flex: 1; padding: 24px 20px; text-align: center; border-right: 1px solid var(--border-light); }
+  .fw-step:last-child { border-right: none; }
+  .fw-circle {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--blue); color: white;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+  }
+  .fw-step-name { font-size: 12px; font-weight: 500; color: var(--text-secondary); line-height: 1.4; }
+
+  /* ─── CONFIDENTIALITY ─── */
+  .conf-note {
+    background: var(--surface-raised); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 24px 28px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .conf-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .conf-text { font-size: 14px; color: var(--text-secondary); line-height: 1.65; font-weight: 400; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 40px;
+    border-top: 1px solid var(--border-light);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; color: var(--text-tertiary);
+  }
+
+  /* ─── FADE IN ─── */
+  .fade-in {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .container, .container-wide { padding: 0 24px; }
+    section { padding: 80px 0; }
+    .hero { padding-top: 100px; }
+    .hero-summary { grid-template-columns: 1fr; }
+    .summary-divider { display: none; }
+    .impact-strip { grid-template-columns: repeat(2, 1fr); }
+    .problem-grid, .context-grid, .insights-grid, .impact-grid { grid-template-columns: 1fr; }
+    .persona-grid, .principles-grid, .reflection-grid { grid-template-columns: repeat(2, 1fr); }
+    .exploration-grid { grid-template-columns: 1fr; }
+    .role-grid { grid-template-columns: 1fr; gap: 40px; }
+    .screen-narrative { grid-template-columns: 1fr; }
+    .fw-grid { flex-wrap: wrap; }
+    .fw-step { flex: none; width: 50%; }
+    .fw-step:nth-child(2n) { border-right: none; }
+  }
+</style>
+<style>
+/* ============================================================
+   SHARED PORTFOLIO DESIGN SYSTEM — Sourav Vinod
+   Injected into all case study pages for visual consistency
+   ============================================================ */
+
+/* — Google Fonts (same as homepage) — */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* — Design tokens — */
+:root {
+  --sv-bg:          #0b0b0f;
+  --sv-surface:     #141419;
+  --sv-surface-2:   #1a1a22;
+  --sv-border:      rgba(255,255,255,0.06);
+  --sv-border-mid:  rgba(255,255,255,0.11);
+  --sv-accent:      #c8ff00;
+  --sv-accent-dim:  rgba(200,255,0,0.10);
+  --sv-accent-glow: rgba(200,255,0,0.05);
+  --sv-white:       #ffffff;
+  --sv-off-white:   #e8e8f0;
+  --sv-muted:       #6b6b80;
+  --sv-light:       #a0a0b8;
+  --sv-mono:        'JetBrains Mono', monospace;
+  --sv-sans:        'Syne', sans-serif;
+  --sv-display:     'Cormorant Garamond', Georgia, serif;
+  --sv-ease:        cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* — Shared Nav — */
+nav.sv-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+  height: 60px;
+  background: rgba(11,11,15,0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--sv-border);
+  font-family: var(--sv-mono);
+}
+
+.sv-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--sv-muted);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.sv-nav-back:hover { color: var(--sv-accent); }
+.sv-nav-back svg { transition: transform 0.2s; }
+.sv-nav-back:hover svg { transform: translateX(-3px); }
+
+.sv-nav-crumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--sv-muted);
+  letter-spacing: 0.06em;
+}
+.sv-nav-crumb-sep { color: rgba(255,255,255,0.15); }
+.sv-nav-crumb-cur { color: var(--sv-light); }
+
+.sv-nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.sv-nav-links a {
+  font-size: 11px;
+  color: var(--sv-muted);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.sv-nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--sv-accent);
+  transition: width 0.3s var(--sv-ease);
+}
+.sv-nav-links a:hover, .sv-nav-links a.active { color: var(--sv-white); }
+.sv-nav-links a:hover::after, .sv-nav-links a.active::after { width: 100%; }
+
+.sv-nav-tag {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--sv-accent);
+  background: var(--sv-accent-dim);
+  border: 1px solid rgba(200,255,0,0.25);
+  padding: 4px 12px;
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* — Shared Footer — */
+footer.sv-footer {
+  background: var(--sv-bg);
+  border-top: 1px solid var(--sv-border);
+  padding: 40px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--sv-mono);
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.sv-footer-left {
+  font-size: 11px;
+  color: var(--sv-muted);
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+.sv-footer-left strong { color: var(--sv-light); font-weight: 500; }
+
+.sv-footer-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sv-footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border: 1px solid var(--sv-border-mid);
+  border-radius: 2px;
+  font-family: var(--sv-mono);
+  font-size: 10px;
+  color: var(--sv-light);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.25s var(--sv-ease);
+  background: transparent;
+}
+.sv-footer-btn:hover {
+  border-color: var(--sv-accent);
+  color: var(--sv-accent);
+  background: var(--sv-accent-glow);
+}
+.sv-footer-btn.primary {
+  background: var(--sv-accent);
+  color: #0b0b0f;
+  border-color: var(--sv-accent);
+  font-weight: 600;
+}
+.sv-footer-btn.primary:hover {
+  background: #d4ff1a;
+  color: #0b0b0f;
+}
+
+/* — Progress bar on scroll — */
+.sv-progress-bar {
+  position: fixed;
+  top: 60px; left: 0;
+  height: 2px;
+  background: var(--sv-accent);
+  width: 0%;
+  z-index: 9998;
+  transition: width 0.05s linear;
+  box-shadow: 0 0 8px rgba(200,255,0,0.4);
+}
+
+/* — Noise overlay — */
+.sv-noise::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.4;
+}
+
+@media (max-width: 768px) {
+  nav.sv-nav { padding: 0 20px; }
+  .sv-nav-links { display: none; }
+  footer.sv-footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+}
+
+</style>
+<style>
+/* ── PORTFOLIO HARMONY OVERRIDES ── */
+/* Applied on top of existing page styles, no content changed */
+
+/* Override nav to dark */
+nav {
+  background: rgba(11,11,15,0.88) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+/* Footer dark override */
+footer {
+  background: #0b0b0f !important;
+  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  color: #6b6b80 !important;
+}
+footer a, footer .ft-btn { 
+  border-color: rgba(255,255,255,0.11) !important;
+  color: #a0a0b8 !important;
+}
+footer .ft-btn.primary, footer .sv-footer-btn.primary {
+  background: #c8ff00 !important;
+  color: #0b0b0f !important;
+  border-color: #c8ff00 !important;
+}
+footer strong { color: #e8e8f0 !important; }
+
+/* Scroll progress bar */
+#svProgress {
+  position: fixed;
+  top: 60px; left: 0;
+  height: 2px;
+  background: #c8ff00;
+  z-index: 9998;
+  box-shadow: 0 0 8px rgba(200,255,0,0.45);
+  transition: width 0.06s linear;
+}
+</style>
+</head>
+<body>
+
+<!-- UNIFIED NAV -->
+<div class="sv-progress-bar" id="svProgress"></div>
+<nav class="sv-nav">
+  <div style="display:flex;align-items:center;gap:14px">
+    <a class="sv-nav-back" href="index.html">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+      Portfolio
+    </a>
+    <span class="sv-nav-crumb-sep" style="font-family:var(--sv-mono);font-size:11px;color:rgba(255,255,255,0.15)">/</span>
+    <span class="sv-nav-crumb-cur" style="font-family:var(--sv-mono);font-size:11px;color:var(--sv-light);letter-spacing:0.06em">Content Authoring Platform</span>
+  </div>
+  <ul class="sv-nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#solutions">Design</a></li>
+    <li><a href="#impact">Impact</a></li>
+  </ul>
+  <span class="sv-nav-tag">APPLE INC · 2024</span>
+</nav>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<section class="hero" id="overview" style="padding-top:88px">
+  <div class="container">
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Role</span>
+        <span class="meta-value">Lead UX Designer</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Platform</span>
+        <span class="meta-value">Internal Enterprise CMS</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Team</span>
+        <span class="meta-value">PM · Engineering · Content Strategy</span>
+      </div>
+    </div>
+
+    <h1>Designing a Secure Content<br><em>Authoring Platform</em><br>for Global Product Launches</h1>
+    <p class="hero-sub">Improving how internal teams create, manage, and publish launch content at scale — from early drafts to scheduled global releases.</p>
+
+    <!-- Overview card -->
+    <div class="hero-summary fade-in" style="margin-bottom:20px;">
+      <div class="summary-col">
+        <div class="summary-label">Project Overview</div>
+        <div class="summary-item">Enterprise CMS for preparing global product launch content</div>
+        <div class="summary-item">Supports structured specs, marketing modules, media and localization</div>
+        <div class="summary-item">Used by internal teams before public announcement</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-col">
+        <div class="summary-label">Platform Scope</div>
+        <div class="tag-row" style="margin-top:4px">
+          <span class="tag tag-blue">Product Specifications</span>
+          <span class="tag tag-green">Marketing Modules</span>
+          <span class="tag tag-amber">Media Assets</span>
+          <span class="tag tag-gray">Localization</span>
+          <span class="tag tag-gray">Publishing Pipelines</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Impact strip -->
+    <div class="impact-strip fade-in">
+      <div class="impact-strip-item">
+        <div class="strip-dot" style="background:var(--blue)"></div>
+        <div class="strip-text">Simplified complex content authoring workflows</div>
+      </div>
+      <div class="impact-strip-item">
+        <div class="strip-dot" style="background:var(--green)"></div>
+        <div class="strip-text">Improved collaboration between marketing and editorial</div>
+      </div>
+      <div class="impact-strip-item">
+        <div class="strip-dot" style="background:var(--amber)"></div>
+        <div class="strip-text">Enabled scalable publishing pipelines for global launches</div>
+      </div>
+      <div class="impact-strip-item">
+        <div class="strip-dot" style="background:#9b59b6"></div>
+        <div class="strip-text">Reduced errors in pre-launch content preparation</div>
+      </div>
+    </div>
+
+    <!-- Hero dashboard -->
+    <div class="hero-screen fade-in">
+      <div class="screen-bar">
+        <div class="screen-dots">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <div class="screen-url">content-platform.internal · Dashboard</div>
+      </div>
+      <div class="cms-shell">
+        <div class="cms-sidebar">
+          <div class="cms-sidebar-header">LaunchCMS</div>
+          <div class="cms-nav-item active">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="currentColor"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="currentColor"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="currentColor"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="currentColor"/></svg>
+            Dashboard
+          </div>
+          <div class="cms-nav-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2V2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 5h10" stroke="currentColor" stroke-width="1.2"/></svg>
+            Products
+          </div>
+          <div class="cms-nav-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L8.5 5.5H13L9.25 8.5L10.75 13L7 10L3.25 13L4.75 8.5L1 5.5H5.5L7 1z" stroke="currentColor" stroke-width="1.2"/></svg>
+            Assets
+          </div>
+          <div class="cms-nav-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 2" stroke="currentColor" stroke-width="1.2"/></svg>
+            Publishing
+          </div>
+          <div class="cms-nav-section">Localization</div>
+          <div class="cms-nav-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M7 2C7 2 4 5 4 7s3 5 3 5" stroke="currentColor" stroke-width="1"/><path d="M2 7h10" stroke="currentColor" stroke-width="1"/></svg>
+            Languages
+          </div>
+          <div class="cms-nav-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 11L5 8 7 10 10 6 12 8" stroke="currentColor" stroke-width="1.2"/></svg>
+            Analytics
+          </div>
+        </div>
+        <div class="cms-main">
+          <div class="cms-main-header">
+            <div class="cms-title">Active Launches</div>
+            <div class="cms-actions">
+              <button class="btn-ghost">Filter</button>
+              <button class="btn-primary">+ New Launch</button>
+            </div>
+          </div>
+          <div class="launch-grid">
+            <div class="launch-card">
+              <div class="launch-card-top"><div class="launch-card-name">Project Orion</div><span class="status-tag tag-approved">Approved</span></div>
+              <div class="progress-bar-wrap"><div class="progress-label"><span>Content readiness</span><span>94%</span></div><div class="progress-track"><div class="progress-fill fill-green" style="width:94%"></div></div></div>
+              <div class="card-countdown"><span>Launches in</span><strong>3d 14h</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <div class="team-avatars"><div class="avatar-mini av1">K</div><div class="avatar-mini av2">M</div><div class="avatar-mini av3">P</div></div>
+                <span style="font-size:9px;color:rgba(255,255,255,0.25)">12 locales</span>
+              </div>
+            </div>
+            <div class="launch-card">
+              <div class="launch-card-top"><div class="launch-card-name">Project Vega</div><span class="status-tag tag-review">In Review</span></div>
+              <div class="progress-bar-wrap"><div class="progress-label"><span>Content readiness</span><span>67%</span></div><div class="progress-track"><div class="progress-fill fill-amber" style="width:67%"></div></div></div>
+              <div class="card-countdown"><span>Launches in</span><strong>11d 6h</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <div class="team-avatars"><div class="avatar-mini av2">S</div><div class="avatar-mini av4">J</div></div>
+                <span style="font-size:9px;color:rgba(255,255,255,0.25)">8 locales</span>
+              </div>
+            </div>
+            <div class="launch-card">
+              <div class="launch-card-top"><div class="launch-card-name">Project Nova</div><span class="status-tag tag-draft">Draft</span></div>
+              <div class="progress-bar-wrap"><div class="progress-label"><span>Content readiness</span><span>23%</span></div><div class="progress-track"><div class="progress-fill fill-blue" style="width:23%"></div></div></div>
+              <div class="card-countdown"><span>Launches in</span><strong>28d</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <div class="team-avatars"><div class="avatar-mini av1">A</div><div class="avatar-mini av3">T</div><div class="avatar-mini av4">R</div><div class="avatar-mini av2">L</div></div>
+                <span style="font-size:9px;color:rgba(255,255,255,0.25)">20 locales</span>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-bottom">
+            <div class="activity-feed">
+              <div class="activity-title">Recent Activity</div>
+              <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>Kira M.</strong> approved Hero Banner in Orion</div><div class="activity-time">2 minutes ago</div></div></div>
+              <div class="activity-item"><div class="activity-dot" style="background:#ff9500"></div><div><div class="activity-text"><strong>Sam P.</strong> requested changes on Spec Sheet — Vega</div><div class="activity-time">28 minutes ago</div></div></div>
+              <div class="activity-item"><div class="activity-dot" style="background:#34c759"></div><div><div class="activity-text"><strong>Localization</strong> completed JP translation for Orion</div><div class="activity-time">1 hour ago</div></div></div>
+              <div class="activity-item"><div class="activity-dot" style="background:#5e5ce6"></div><div><div class="activity-text"><strong>Alex T.</strong> created Project Nova launch entry</div><div class="activity-time">3 hours ago</div></div></div>
+            </div>
+            <div class="launch-countdown-card">
+              <div class="countdown-label">Project Orion Launches</div>
+              <div class="countdown-time">
+                <div class="time-unit"><div class="time-num">03</div><div class="time-lbl">Days</div></div>
+                <div class="time-sep">:</div>
+                <div class="time-unit"><div class="time-num">14</div><div class="time-lbl">Hrs</div></div>
+                <div class="time-sep">:</div>
+                <div class="time-unit"><div class="time-num">22</div><div class="time-lbl">Min</div></div>
+              </div>
+              <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(10,132,255,0.15)">
+                <div class="checklist-title">Pre-launch checklist</div>
+                <div class="check-item"><span>✅</span><span class="check-label done">Specs finalized</span></div>
+                <div class="check-item"><span>✅</span><span class="check-label done">Assets uploaded</span></div>
+                <div class="check-item"><span>🔄</span><span class="check-label">Legal review</span></div>
+                <div class="check-item"><span>⏳</span><span class="check-label">Final approval</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ MY ROLE ═══════════════════════════════ -->
+<section style="background:var(--bg); border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="eyebrow">My Role</div>
+    <div class="role-grid">
+      <div>
+        <div class="role-col-label">Title</div>
+        <div class="role-title-big">UX Designer</div>
+        <span class="role-tag">Product Design · Enterprise CMS</span>
+        <div class="role-col-label" style="margin-top:28px">Collaboration</div>
+        <p style="font-size:15px;margin-top:6px">Worked alongside product managers, engineers, content strategists, and localization teams — aligning design decisions with real workflow constraints across all stages of the authoring lifecycle.</p>
+      </div>
+      <div>
+        <div class="role-col-label">Responsibilities</div>
+        <ul class="responsibility-list">
+          <li><div class="resp-icon">🔍</div><div>Mapped existing authoring workflows through observation sessions and stakeholder interviews to identify friction across the content lifecycle.</div></li>
+          <li><div class="resp-icon">📋</div><div>Designed structured specification entry interfaces that reduced complexity for content authors managing large volumes of product data.</div></li>
+          <li><div class="resp-icon">🧩</div><div>Defined the modular page building architecture — module library, drag-and-drop canvas, and properties inspector interaction model.</div></li>
+          <li><div class="resp-icon">🤝</div><div>Created collaboration features including inline review states, ownership indicators, and comment threads for multi-team visibility.</div></li>
+          <li><div class="resp-icon">🚀</div><div>Designed publishing workflows with approval gates, pre-launch checklists, and scheduling controls to support reliable time-sensitive launches.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ THE PROBLEM ═══════════════════════════════ -->
+<section id="problem">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">The Problem</div>
+      <h2>Fragmented tools create friction at every launch</h2>
+      <p>Preparing content for global product launches requires coordinating product specifications, marketing copy, media assets, and localized content across multiple teams. Before this platform, internal teams relied on a collection of disconnected tools — and the cost was visible at every step.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card fade-in">
+        <div class="problem-num">Problem 01</div>
+        <h3>Complex specification entry</h3>
+        <p>Authors spent excessive time navigating dense, unstructured forms. Required fields were buried, categories had no hierarchy, and there was no way to reuse values from previous products.</p>
+      </div>
+      <div class="problem-card fade-in">
+        <div class="problem-num">Problem 02</div>
+        <h3>Fragmented page assembly</h3>
+        <p>Building a product page meant juggling spreadsheets, shared drives, and a CMS simultaneously. There was no modular canvas — every page was assembled manually from disconnected sources.</p>
+      </div>
+      <div class="problem-card fade-in">
+        <div class="problem-num">Problem 03</div>
+        <h3>Unclear collaboration state</h3>
+        <p>When multiple teams worked on the same entry, there was no shared visibility into who was editing what, what had been reviewed, and which modules were blocked — leading to duplicate work and last-minute conflicts.</p>
+      </div>
+      <div class="problem-card fade-in">
+        <div class="problem-num">Problem 04</div>
+        <h3>Opaque publishing pipeline</h3>
+        <p>The path from "approved" to "live" was invisible. Editors couldn't see where content stood in the publishing pipeline, creating anxiety and miscommunication in the final days before launch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ OPERATIONAL CONTEXT ═══════════════════════════════ -->
+<section style="background:var(--bg); border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">Operational Context</div>
+      <h2>The real environment where this system lives</h2>
+    </div>
+    <div class="context-grid">
+      <div class="context-text fade-in">
+        <p>Global product launches involve coordinating enormous volumes of marketing content — product specifications, feature copy, imagery, video, and localized variants across dozens of markets — all of which must be ready before a single word goes public.</p>
+        <p>Internal teams use a secure, access-controlled CMS to prepare, review, and stage all of this content well ahead of announcement day. The platform must support the entire authoring lifecycle while keeping everything strictly confidential until launch.</p>
+        <p>The content types managed span a wide surface area: structured product data, rich marketing modules, media assets, technical specifications, and localized strings — each requiring different authoring workflows and approval chains.</p>
+        <p>This means the system must simultaneously support <strong>structured content</strong>, <strong>secure collaboration</strong>, and <strong>predictable publishing workflows</strong> — all without sacrificing the speed teams need under time pressure.</p>
+      </div>
+      <div class="fade-in">
+        <div class="workflow-card">
+          <div class="workflow-card-title">Content Lifecycle</div>
+          <div class="workflow-step-row"><div class="step-num">1</div><div class="step-text">Brief &amp; product entry created</div></div>
+          <div class="workflow-step-row"><div class="step-num">2</div><div class="step-text">Structured specs entered by engineering</div></div>
+          <div class="workflow-step-row"><div class="step-num">3</div><div class="step-text">Marketing modules authored</div></div>
+          <div class="workflow-step-row"><div class="step-num">4</div><div class="step-text">Media assets uploaded and tagged</div></div>
+          <div class="workflow-step-row"><div class="step-num">5</div><div class="step-text">Content sent for editorial review</div></div>
+          <div class="workflow-step-row"><div class="step-num">6</div><div class="step-text">Localization across all regions</div></div>
+          <div class="workflow-step-row"><div class="step-num">7</div><div class="step-text">Legal and brand approval</div></div>
+          <div class="workflow-step-row"><div class="step-num">8</div><div class="step-text">Scheduled for global simultaneous publish</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ USERS ═══════════════════════════════ -->
+<section id="research" style="border-top:1px solid var(--border-light);">
+  <div class="container-wide">
+    <div class="section-header fade-in" style="max-width:100%">
+      <div class="eyebrow">Users</div>
+      <h2>Four distinct user types, one shared platform</h2>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-card fade-in">
+        <div class="persona-icon pi-blue">✍️</div>
+        <div class="persona-role">Primary</div>
+        <div class="persona-name">Content Author</div>
+        <div class="persona-section">
+          <div class="persona-section-label">Goals</div>
+          <ul class="persona-list">
+            <li>Enter product specs efficiently</li>
+            <li>Draft and preview page modules</li>
+            <li>Manage multiple products at once</li>
+          </ul>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-label">Frustrations</div>
+          <ul class="persona-list">
+            <li>Too many required fields at once</li>
+            <li>No ability to save partial drafts</li>
+            <li>Unclear what "done" looks like</li>
+          </ul>
+        </div>
+      </div>
+      <div class="persona-card fade-in">
+        <div class="persona-icon pi-green">🔍</div>
+        <div class="persona-role">Secondary</div>
+        <div class="persona-name">Editor / Reviewer</div>
+        <div class="persona-section">
+          <div class="persona-section-label">Goals</div>
+          <ul class="persona-list">
+            <li>Review and approve modules quickly</li>
+            <li>Leave contextual comments</li>
+            <li>Track overall content readiness</li>
+          </ul>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-label">Frustrations</div>
+          <ul class="persona-list">
+            <li>No diff view between versions</li>
+            <li>Can't see all open review items</li>
+            <li>Review context lost in email</li>
+          </ul>
+        </div>
+      </div>
+      <div class="persona-card fade-in">
+        <div class="persona-icon pi-amber">📣</div>
+        <div class="persona-role">Stakeholder</div>
+        <div class="persona-name">Marketing Lead</div>
+        <div class="persona-section">
+          <div class="persona-section-label">Goals</div>
+          <ul class="persona-list">
+            <li>Monitor launch readiness at a glance</li>
+            <li>Ensure brand consistency across pages</li>
+            <li>Coordinate with localization teams</li>
+          </ul>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-label">Frustrations</div>
+          <ul class="persona-list">
+            <li>No high-level status overview</li>
+            <li>Can't compare localized variants</li>
+            <li>Hard to identify blockers early</li>
+          </ul>
+        </div>
+      </div>
+      <div class="persona-card fade-in">
+        <div class="persona-icon pi-gray">🌍</div>
+        <div class="persona-role">Contributor</div>
+        <div class="persona-name">Localization Team</div>
+        <div class="persona-section">
+          <div class="persona-section-label">Goals</div>
+          <ul class="persona-list">
+            <li>Translate finalized content quickly</li>
+            <li>Work on locale-specific variants</li>
+            <li>Flag untranslatable strings</li>
+          </ul>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-label">Frustrations</div>
+          <ul class="persona-list">
+            <li>Content changes after translation starts</li>
+            <li>No notification when source text updates</li>
+            <li>Can't preview translated layout</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ KEY INSIGHTS ═══════════════════════════════ -->
+<section style="background:var(--bg); border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">Key Insights from Research</div>
+      <h2>What we learned and how it shaped the design</h2>
+      <p>Observation sessions and stakeholder interviews surfaced four insights that directly informed the system's core design decisions.</p>
+    </div>
+    <div class="insights-grid">
+      <div class="insight-card fade-in">
+        <div class="insight-num">1</div>
+        <div class="insight-body">
+          <div class="insight-finding">Launch content involves many stakeholders with different needs.</div>
+          <div class="insight-response-label">Design Response</div>
+          <div class="insight-response">Create collaborative workflows with explicit ownership — so each team can act independently without stepping on each other.</div>
+        </div>
+      </div>
+      <div class="insight-card fade-in">
+        <div class="insight-num">2</div>
+        <div class="insight-body">
+          <div class="insight-finding">Content must follow structured product specifications exactly.</div>
+          <div class="insight-response-label">Design Response</div>
+          <div class="insight-response">Use structured content models instead of free-form editors. Schema-driven entry reduces errors and enables downstream automation.</div>
+        </div>
+      </div>
+      <div class="insight-card fade-in">
+        <div class="insight-num">3</div>
+        <div class="insight-body">
+          <div class="insight-finding">Authors need to see how their content will appear before submitting it for review.</div>
+          <div class="insight-response-label">Design Response</div>
+          <div class="insight-response">Build real-time preview functionality directly into the editor — not as a separate step — to reduce the review-fix-resubmit cycle.</div>
+        </div>
+      </div>
+      <div class="insight-card fade-in">
+        <div class="insight-num">4</div>
+        <div class="insight-body">
+          <div class="insight-finding">Publishing is never a single step — it requires multiple approval gates.</div>
+          <div class="insight-response-label">Design Response</div>
+          <div class="insight-response">Design a transparent, status-based publishing pipeline. Each stage is visible to every stakeholder so no one is left wondering what's blocking launch.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DESIGN PRINCIPLES ═══════════════════════════════ -->
+<section style="border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">Design Principles</div>
+      <h2>Six principles that guided every decision</h2>
+      <p>Before moving into interaction design, the team established principles to evaluate design choices against — keeping work grounded in the real constraints of enterprise workflows.</p>
+    </div>
+    <div class="principles-grid">
+      <div class="principle-card fade-in">
+        <div class="principle-num">Principle 01</div>
+        <h3>Structured Content</h3>
+        <p>Content must follow consistent schemas. Constraints enable consistency at scale and make localization and publishing tractable across dozens of markets.</p>
+      </div>
+      <div class="principle-card fade-in">
+        <div class="principle-num">Principle 02</div>
+        <h3>Collaboration by Default</h3>
+        <p>Multiple teams must work together efficiently. Editing states, reviewer assignments, and ownership should be visible inside the interface — not in email.</p>
+      </div>
+      <div class="principle-card fade-in">
+        <div class="principle-num">Principle 03</div>
+        <h3>Preview Before Publish</h3>
+        <p>Authors must see exactly how content will appear before it enters the review process. Live preview is a core feature, not an afterthought.</p>
+      </div>
+      <div class="principle-card fade-in">
+        <div class="principle-num">Principle 04</div>
+        <h3>Publishing Transparency</h3>
+        <p>Content status must be visible to every stakeholder at every stage — from draft through final approval — so teams always know where they stand.</p>
+      </div>
+      <div class="principle-card fade-in">
+        <div class="principle-num">Principle 05</div>
+        <h3>Scalable Workflows</h3>
+        <p>The system must support complex, multi-team launch processes without requiring manual coordination. Workflow logic should be built into the platform.</p>
+      </div>
+      <div class="principle-card fade-in">
+        <div class="principle-num">Principle 06</div>
+        <h3>Reduce Cognitive Load</h3>
+        <p>Surface only what's needed at each step. Progressive disclosure rather than exposing every field at once — the right information at the right moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ SYSTEM ARCHITECTURE ═══════════════════════════════ -->
+<section style="background:var(--bg); border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">System Architecture</div>
+      <h2>How the layers connect</h2>
+      <p>Each layer of the system serves a distinct purpose. Together they form a pipeline from raw product data to a synchronized global release — with structured authoring, preview, and approval gates at every stage.</p>
+    </div>
+    <div class="arch-wrapper fade-in">
+      <div class="arch-node">
+        <div class="arch-icon ai-amber">📦</div>
+        <div><div class="arch-node-name">Product Data</div><div class="arch-node-desc">Structured specs, features, and technical attributes</div></div>
+      </div>
+      <div class="arch-arrow"><div class="arch-line"></div><div class="arch-arrowhead">▼</div></div>
+      <div class="arch-node">
+        <div class="arch-icon ai-blue">🧩</div>
+        <div><div class="arch-node-name">Content Modules</div><div class="arch-node-desc">Structured spec data, marketing copy, and media assets</div></div>
+      </div>
+      <div class="arch-arrow"><div class="arch-line"></div><div class="arch-arrowhead">▼</div></div>
+      <div class="arch-node">
+        <div class="arch-icon ai-blue">✍️</div>
+        <div><div class="arch-node-name">Authoring Interface</div><div class="arch-node-desc">Editor, page builder, and asset manager</div></div>
+      </div>
+      <div class="arch-arrow"><div class="arch-line"></div><div class="arch-arrowhead">▼</div></div>
+      <div class="arch-node">
+        <div class="arch-icon ai-gray">🗄️</div>
+        <div><div class="arch-node-name">Content Database</div><div class="arch-node-desc">Versioned, structured content store with access controls</div></div>
+      </div>
+      <div class="arch-arrow"><div class="arch-line"></div><div class="arch-arrowhead">▼</div></div>
+      <div class="arch-node">
+        <div class="arch-icon ai-amber">👁️</div>
+        <div><div class="arch-node-name">Preview System</div><div class="arch-node-desc">Live render across device viewports before approval</div></div>
+      </div>
+      <div class="arch-arrow"><div class="arch-line"></div><div class="arch-arrowhead">▼</div></div>
+      <div class="arch-node">
+        <div class="arch-icon ai-gray">📋</div>
+        <div><div class="arch-node-name">Publishing Pipeline</div><div class="arch-node-desc">Approval gates, localization, scheduling, and audit trail</div></div>
+      </div>
+      <div class="arch-arrow"><div class="arch-line"></div><div class="arch-arrowhead">▼</div></div>
+      <div class="arch-node" style="border-color:rgba(29,131,72,0.3); background:var(--green-light);">
+        <div class="arch-icon ai-green">🌐</div>
+        <div><div class="arch-node-name" style="color:var(--green)">Public Website</div><div class="arch-node-desc">Simultaneous global release at scheduled launch time</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DESIGN EXPLORATION ═══════════════════════════════ -->
+<section style="border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">Design Exploration</div>
+      <h2>Decisions made before the final solution</h2>
+      <p>Early exploration focused on two core problems: how to structure product specifications for efficient entry, and how to define a reusable module system for page building.</p>
+    </div>
+    <div class="exploration-grid">
+      <!-- CONCEPT A: Traditional Form-Based CMS -->
+      <div class="exploration-card fade-in">
+        <div class="exploration-visual" style="background:#f2f2f4;">
+          <div style="width:100%;height:100%;padding:16px 18px;display:flex;flex-direction:column;font-family:'Inter',sans-serif;">
+            <!-- Top bar -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;padding-bottom:11px;border-bottom:1px solid #e0e0e4;">
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <div style="height:9px;width:100px;background:#c7c7cc;border-radius:3px;"></div>
+                <div style="height:7px;width:64px;background:#d8d8dc;border-radius:3px;"></div>
+              </div>
+              <div style="display:flex;gap:5px;align-items:center;">
+                <div style="height:7px;width:38px;background:#d8d8dc;border-radius:2px;"></div>
+                <div style="height:22px;width:50px;background:#e0e0e4;border-radius:6px;"></div>
+                <div style="height:22px;width:50px;background:#c7c7cc;border-radius:6px;opacity:0.7;"></div>
+              </div>
+            </div>
+            <!-- Form fields -->
+            <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+              <!-- Field row -->
+              <div style="display:flex;align-items:center;gap:0;background:white;border:1px solid #e0e0e4;border-radius:7px;overflow:hidden;">
+                <div style="width:90px;padding:8px 10px;background:#f7f7f8;border-right:1px solid #e0e0e4;flex-shrink:0;">
+                  <div style="height:7px;width:70px;background:#c7c7cc;border-radius:2px;margin-bottom:3px;"></div>
+                  <div style="height:6px;width:40px;background:#d8d8dc;border-radius:2px;"></div>
+                </div>
+                <div style="flex:1;padding:8px 10px;">
+                  <div style="height:7px;width:90%;background:#ebebed;border-radius:2px;"></div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0;background:white;border:1px solid #e0e0e4;border-radius:7px;overflow:hidden;">
+                <div style="width:90px;padding:8px 10px;background:#f7f7f8;border-right:1px solid #e0e0e4;flex-shrink:0;">
+                  <div style="height:7px;width:55px;background:#c7c7cc;border-radius:2px;margin-bottom:3px;"></div>
+                  <div style="height:6px;width:35px;background:#d8d8dc;border-radius:2px;"></div>
+                </div>
+                <div style="flex:1;padding:8px 10px;">
+                  <div style="height:7px;width:75%;background:#ebebed;border-radius:2px;"></div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0;background:white;border:1px solid #e0e0e4;border-radius:7px;overflow:hidden;">
+                <div style="width:90px;padding:8px 10px;background:#f7f7f8;border-right:1px solid #e0e0e4;flex-shrink:0;">
+                  <div style="height:7px;width:78px;background:#c7c7cc;border-radius:2px;margin-bottom:3px;"></div>
+                  <div style="height:6px;width:44px;background:#d8d8dc;border-radius:2px;"></div>
+                </div>
+                <div style="flex:1;padding:8px 10px;display:flex;gap:5px;">
+                  <div style="height:14px;width:14px;background:#e0e0e4;border-radius:3px;flex-shrink:0;"></div>
+                  <div style="height:7px;flex:1;background:#ebebed;border-radius:2px;align-self:center;"></div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0;background:white;border:1px solid #e0e0e4;border-radius:7px;overflow:hidden;">
+                <div style="width:90px;padding:8px 10px;background:#f7f7f8;border-right:1px solid #e0e0e4;flex-shrink:0;">
+                  <div style="height:7px;width:60px;background:#c7c7cc;border-radius:2px;margin-bottom:3px;"></div>
+                  <div style="height:6px;width:30px;background:#d8d8dc;border-radius:2px;"></div>
+                </div>
+                <div style="flex:1;padding:8px 10px;display:flex;gap:4px;flex-wrap:wrap;">
+                  <div style="height:14px;width:36px;background:#e5e5e7;border-radius:100px;"></div>
+                  <div style="height:14px;width:42px;background:#e5e5e7;border-radius:100px;"></div>
+                  <div style="height:14px;width:30px;background:#e5e5e7;border-radius:100px;opacity:0.6;"></div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0;background:white;border:1px solid #e0e0e4;border-radius:7px;overflow:hidden;opacity:0.6;">
+                <div style="width:90px;padding:8px 10px;background:#f7f7f8;border-right:1px solid #e0e0e4;flex-shrink:0;">
+                  <div style="height:7px;width:48px;background:#c7c7cc;border-radius:2px;margin-bottom:3px;"></div>
+                  <div style="height:6px;width:62px;background:#d8d8dc;border-radius:2px;"></div>
+                </div>
+                <div style="flex:1;padding:8px 10px;">
+                  <div style="height:7px;width:55%;background:#ebebed;border-radius:2px;"></div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0;background:white;border:1px solid #e0e0e4;border-radius:7px;overflow:hidden;opacity:0.35;">
+                <div style="width:90px;padding:8px 10px;background:#f7f7f8;border-right:1px solid #e0e0e4;flex-shrink:0;">
+                  <div style="height:7px;width:72px;background:#c7c7cc;border-radius:2px;margin-bottom:3px;"></div>
+                  <div style="height:6px;width:38px;background:#d8d8dc;border-radius:2px;"></div>
+                </div>
+                <div style="flex:1;padding:8px 10px;">
+                  <div style="height:7px;width:80%;background:#ebebed;border-radius:2px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="exploration-caption">
+          <div class="exploration-tag">Concept A — Rejected</div>
+          <h3>Traditional Form-Based CMS</h3>
+          <p>A flat list of fields for every spec. Too rigid, too dense — marketing teams needed flexibility and product teams needed hierarchy. Discarded early.</p>
+        </div>
+      </div>
+
+      <!-- CONCEPT B: Modular Content Editor -->
+      <div class="exploration-card fade-in">
+        <div class="exploration-visual" style="background:#f2f2f4;">
+          <div style="width:100%;height:100%;padding:16px 18px;display:flex;flex-direction:column;font-family:'Inter',sans-serif;">
+            <!-- Header row -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <div style="height:9px;width:88px;background:#c7c7cc;border-radius:3px;"></div>
+                <div style="height:6px;width:52px;background:#d8d8dc;border-radius:3px;"></div>
+              </div>
+              <div style="height:7px;width:48px;background:#d8d8dc;border-radius:2px;"></div>
+            </div>
+            <!-- Block type tabs -->
+            <div style="display:flex;gap:4px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #e0e0e4;">
+              <div style="height:22px;padding:0 10px;background:#0066cc;border-radius:6px;display:flex;align-items:center;gap:4px;">
+                <div style="width:5px;height:5px;background:rgba(255,255,255,0.6);border-radius:1px;"></div>
+                <div style="height:6px;width:22px;background:rgba(255,255,255,0.7);border-radius:2px;"></div>
+              </div>
+              <div style="height:22px;padding:0 9px;background:#e8e8ea;border-radius:6px;display:flex;align-items:center;gap:4px;">
+                <div style="width:5px;height:5px;background:#c7c7cc;border-radius:1px;"></div>
+                <div style="height:6px;width:18px;background:#c7c7cc;border-radius:2px;"></div>
+              </div>
+              <div style="height:22px;padding:0 9px;background:#e8e8ea;border-radius:6px;display:flex;align-items:center;gap:4px;">
+                <div style="width:5px;height:5px;background:#c7c7cc;border-radius:1px;"></div>
+                <div style="height:6px;width:24px;background:#c7c7cc;border-radius:2px;"></div>
+              </div>
+              <div style="height:22px;padding:0 9px;background:#e8e8ea;border-radius:6px;display:flex;align-items:center;gap:4px;">
+                <div style="width:5px;height:5px;background:#c7c7cc;border-radius:1px;"></div>
+                <div style="height:6px;width:16px;background:#c7c7cc;border-radius:2px;"></div>
+              </div>
+            </div>
+            <!-- Blocks -->
+            <div style="display:flex;flex-direction:column;gap:5px;flex:1;">
+              <!-- Hero block -->
+              <div style="background:white;border:1px solid #dae8f9;border-radius:8px;padding:9px 10px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 3px rgba(0,102,204,0.06);">
+                <div style="width:3px;height:34px;background:#0066cc;border-radius:2px;flex-shrink:0;opacity:0.6;"></div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:1px;">
+                    <div style="height:6px;width:26px;background:#b3d1f0;border-radius:2px;"></div>
+                    <div style="height:6px;width:38px;background:#ebebed;border-radius:2px;margin-left:auto;"></div>
+                  </div>
+                  <div style="height:7px;width:100%;background:#ebebed;border-radius:2px;"></div>
+                  <div style="height:7px;width:72%;background:#ebebed;border-radius:2px;"></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0;">
+                  <div style="width:16px;height:6px;background:#e0e0e4;border-radius:2px;"></div>
+                  <div style="width:16px;height:6px;background:#e0e0e4;border-radius:2px;"></div>
+                </div>
+              </div>
+              <!-- Media block -->
+              <div style="background:white;border:1px solid #d6eee3;border-radius:8px;padding:9px 10px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 3px rgba(29,131,72,0.05);">
+                <div style="width:3px;height:30px;background:#1d8348;border-radius:2px;flex-shrink:0;opacity:0.5;"></div>
+                <div style="width:38px;height:28px;background:#e8f5ee;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+                  <div style="width:14px;height:11px;background:#b3d9c4;border-radius:2px;"></div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:1px;">
+                    <div style="height:6px;width:22px;background:#a8d5bb;border-radius:2px;"></div>
+                  </div>
+                  <div style="height:7px;width:85%;background:#ebebed;border-radius:2px;"></div>
+                  <div style="height:6px;width:55%;background:#ebebed;border-radius:2px;"></div>
+                </div>
+              </div>
+              <!-- Spec table block -->
+              <div style="background:white;border:1px solid #fef3cd;border-radius:8px;padding:9px 10px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 3px rgba(154,103,0,0.05);">
+                <div style="width:3px;height:30px;background:#ff9500;border-radius:2px;flex-shrink:0;opacity:0.55;"></div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:3px;">
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">
+                    <div style="height:6px;width:28px;background:#f5d98a;border-radius:2px;"></div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+                    <div style="height:6px;background:#ebebed;border-radius:2px;"></div>
+                    <div style="height:6px;background:#ebebed;border-radius:2px;"></div>
+                    <div style="height:6px;width:70%;background:#ebebed;border-radius:2px;"></div>
+                    <div style="height:6px;width:80%;background:#ebebed;border-radius:2px;"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Add block CTA -->
+              <div style="border:1.5px dashed #d2d2d7;border-radius:8px;padding:8px 10px;display:flex;align-items:center;justify-content:center;gap:6px;opacity:0.5;">
+                <div style="width:14px;height:14px;border-radius:50%;border:1.5px dashed #c7c7cc;display:flex;align-items:center;justify-content:center;">
+                  <div style="font-size:9px;color:#a1a1a6;line-height:1;margin-top:-1px;">+</div>
+                </div>
+                <div style="height:7px;width:52px;background:#d8d8dc;border-radius:2px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="exploration-caption">
+          <div class="exploration-tag">Concept B — Chosen Approach</div>
+          <h3>Modular Content Editor</h3>
+          <p>Block-based authoring with reusable components. Authors compose from a library of typed blocks. Chosen for its balance of structure and flexibility across user types.</p>
+        </div>
+      </div>
+
+      <!-- LAYOUT EXPLORATION: Three-Panel -->
+      <div class="exploration-card fade-in">
+        <div class="exploration-visual" style="background:#f2f2f4;padding:0;overflow:hidden;">
+          <!-- Top chrome bar -->
+          <div style="position:absolute;top:0;left:0;right:0;height:28px;background:#e8e8ea;border-bottom:1px solid #d8d8dc;display:flex;align-items:center;padding:0 12px;gap:8px;z-index:2;">
+            <div style="display:flex;gap:4px;">
+              <div style="width:7px;height:7px;border-radius:50%;background:#c7c7cc;"></div>
+              <div style="width:7px;height:7px;border-radius:50%;background:#c7c7cc;"></div>
+              <div style="width:7px;height:7px;border-radius:50%;background:#c7c7cc;"></div>
+            </div>
+            <div style="flex:1;display:flex;justify-content:center;">
+              <div style="height:14px;width:120px;background:#dcdcde;border-radius:3px;"></div>
+            </div>
+            <div style="display:flex;gap:4px;">
+              <div style="height:14px;width:36px;background:#dcdcde;border-radius:3px;"></div>
+              <div style="height:14px;width:36px;background:#0066cc;border-radius:3px;opacity:0.25;"></div>
+            </div>
+          </div>
+          <!-- Three panels -->
+          <div style="position:absolute;top:28px;left:0;right:0;bottom:0;display:grid;grid-template-columns:80px 1fr 76px;font-family:'Inter',sans-serif;">
+            <!-- LEFT: Spec Panel -->
+            <div style="background:#eaeaec;border-right:1px solid #d5d5d8;padding:10px 8px;display:flex;flex-direction:column;gap:0;overflow:hidden;">
+              <div style="font-size:7px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#a1a1a6;margin-bottom:8px;">Spec Panel</div>
+              <!-- Spec group -->
+              <div style="margin-bottom:8px;">
+                <div style="height:6px;width:60px;background:#c7c7cc;border-radius:2px;margin-bottom:5px;"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding:6px 6px;background:white;border-radius:5px;border:1px solid #dcdcde;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="height:5px;width:28px;background:#d8d8dc;border-radius:1px;"></div>
+                    <div style="height:5px;width:20px;background:#ebebed;border-radius:1px;"></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="height:5px;width:32px;background:#d8d8dc;border-radius:1px;"></div>
+                    <div style="height:5px;width:16px;background:#ebebed;border-radius:1px;"></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="height:5px;width:24px;background:#d8d8dc;border-radius:1px;"></div>
+                    <div style="height:5px;width:24px;background:#ebebed;border-radius:1px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom:8px;">
+                <div style="height:6px;width:48px;background:#c7c7cc;border-radius:2px;margin-bottom:5px;"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding:6px 6px;background:white;border-radius:5px;border:1px solid #dcdcde;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="height:5px;width:22px;background:#d8d8dc;border-radius:1px;"></div>
+                    <div style="height:5px;width:28px;background:#ebebed;border-radius:1px;"></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="height:5px;width:30px;background:#d8d8dc;border-radius:1px;"></div>
+                    <div style="height:5px;width:18px;background:#ebebed;border-radius:1px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div style="opacity:0.45;">
+                <div style="height:6px;width:54px;background:#c7c7cc;border-radius:2px;margin-bottom:5px;"></div>
+                <div style="height:5px;background:#d8d8dc;border-radius:1px;margin-bottom:3px;"></div>
+                <div style="height:5px;width:75%;background:#d8d8dc;border-radius:1px;"></div>
+              </div>
+            </div>
+            <!-- CENTER: Canvas -->
+            <div style="background:white;border-right:1px solid #d5d5d8;padding:10px 9px;display:flex;flex-direction:column;gap:0;overflow:hidden;">
+              <div style="font-size:7px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#a1a1a6;margin-bottom:8px;">Authoring Canvas</div>
+              <!-- Active block with blue ring -->
+              <div style="border:1.5px solid #0066cc;border-radius:6px;padding:7px 8px;margin-bottom:5px;box-shadow:0 0 0 2px rgba(0,102,204,0.1);">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:5px;">
+                  <div style="height:5px;width:20px;background:#b3d1f0;border-radius:2px;"></div>
+                  <div style="height:5px;width:1px;background:#e0e0e4;"></div>
+                  <div style="height:5px;width:28px;background:#ebebed;border-radius:2px;"></div>
+                </div>
+                <div style="height:8px;width:100%;background:#f0f0f2;border-radius:2px;margin-bottom:3px;"></div>
+                <div style="height:8px;width:82%;background:#f0f0f2;border-radius:2px;"></div>
+              </div>
+              <!-- Image block -->
+              <div style="border:1px solid #e5e5e7;border-radius:6px;padding:7px 8px;margin-bottom:5px;background:#fafafa;">
+                <div style="height:5px;width:16px;background:#d6eee3;border-radius:2px;margin-bottom:4px;"></div>
+                <div style="height:26px;background:#e8e8ea;border-radius:4px;display:flex;align-items:center;justify-content:center;">
+                  <div style="width:18px;height:14px;background:#d2d2d7;border-radius:2px;"></div>
+                </div>
+              </div>
+              <!-- Spec row block -->
+              <div style="border:1px solid #fef3cd;border-radius:6px;padding:7px 8px;margin-bottom:5px;background:#fffdf5;">
+                <div style="height:5px;width:22px;background:#f5d98a;border-radius:2px;margin-bottom:4px;"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+                  <div style="height:6px;background:#f0f0f2;border-radius:2px;"></div>
+                  <div style="height:6px;background:#f0f0f2;border-radius:2px;"></div>
+                  <div style="height:6px;width:80%;background:#f0f0f2;border-radius:2px;"></div>
+                  <div style="height:6px;width:70%;background:#f0f0f2;border-radius:2px;"></div>
+                </div>
+              </div>
+              <!-- Drop zone -->
+              <div style="border:1.5px dashed #d2d2d7;border-radius:6px;padding:7px;display:flex;align-items:center;justify-content:center;opacity:0.45;">
+                <div style="height:6px;width:48px;background:#d8d8dc;border-radius:2px;"></div>
+              </div>
+            </div>
+            <!-- RIGHT: Preview -->
+            <div style="background:#eaeaec;padding:10px 7px;display:flex;flex-direction:column;gap:0;overflow:hidden;">
+              <div style="font-size:7px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#a1a1a6;margin-bottom:8px;">Live Preview</div>
+              <!-- Simulated rendered output -->
+              <div style="background:white;border-radius:5px;overflow:hidden;border:1px solid #dcdcde;flex:1;">
+                <div style="height:22px;background:#1c1c1e;"></div>
+                <div style="padding:6px 6px;display:flex;flex-direction:column;gap:3px;">
+                  <div style="height:6px;width:90%;background:#d8d8dc;border-radius:2px;"></div>
+                  <div style="height:6px;width:70%;background:#d8d8dc;border-radius:2px;"></div>
+                  <div style="height:10px;background:#ebebed;border-radius:2px;margin-top:2px;"></div>
+                  <div style="height:5px;width:100%;background:#e5e5e7;border-radius:2px;margin-top:2px;"></div>
+                  <div style="height:5px;width:85%;background:#e5e5e7;border-radius:2px;"></div>
+                  <div style="height:5px;width:65%;background:#e5e5e7;border-radius:2px;"></div>
+                  <div style="height:12px;background:#ebebed;border-radius:2px;margin-top:2px;opacity:0.6;"></div>
+                  <div style="height:5px;background:#e5e5e7;border-radius:2px;opacity:0.5;margin-top:2px;"></div>
+                  <div style="height:5px;width:75%;background:#e5e5e7;border-radius:2px;opacity:0.5;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="exploration-caption">
+          <div class="exploration-tag">Layout Exploration</div>
+          <h3>Three-Panel Interaction Model</h3>
+          <p>Tested sidebar-only and inline editing before a three-panel layout emerged as optimal — spec panel, authoring canvas, and live preview all visible simultaneously.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ KEY SCREENS ═══════════════════════════════ -->
+<section id="solutions" class="screens-section" style="border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="screen-intro fade-in">
+      <div class="eyebrow">Key Screens</div>
+      <h2>Four screens.<br>One coherent system.</h2>
+      <p>Each screen addresses a distinct friction point identified during research, then fits into a single unified authoring experience.</p>
+    </div>
+
+    <!-- SCREEN 1: EDITOR -->
+    <div class="screen-block">
+      <div class="screen-title">01 — Product Authoring Editor</div>
+      <div class="screen-subtitle">Structured spec entry alongside a live editing canvas and real-time preview pane.</div>
+      <div class="screen-narrative fade-in">
+        <div class="narrative-col">
+          <div class="narrative-label">Problem</div>
+          <p>Authors needed a single environment to enter product specifications, draft marketing copy, and preview how content would render — without switching between tools.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Design Decision</div>
+          <p>A three-panel layout: structured spec entry on the left, a modular block-based canvas in the center, and a live preview pane on the right. Spec data links directly into content blocks.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Outcome</div>
+          <p>Authors can enter specifications and compose marketing content in the same workflow, with real-time visual feedback — eliminating the need for external preview tools.</p>
+        </div>
+      </div>
+      <div class="screen-frame fade-in">
+        <div class="screen-bar">
+          <div class="screen-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <div class="screen-url">content-platform.internal · Products › Orion › Edit</div>
+        </div>
+        <div class="editor-shell">
+          <div class="editor-sidebar-l">
+            <div class="ed-section-title">Specifications</div>
+            <div class="spec-cat">
+              <div class="spec-cat-label">📷 Camera <span>▾</span></div>
+              <div class="spec-field"><div class="spec-field-name">Main sensor</div><div class="spec-field-val">48 MP, f/1.6</div></div>
+              <div class="spec-field"><div class="spec-field-name">Optical zoom</div><div class="spec-field-val">5× optical</div></div>
+              <div class="spec-field"><div class="spec-field-name">Video</div><div class="spec-field-val">4K ProRes</div></div>
+            </div>
+            <div class="spec-cat">
+              <div class="spec-cat-label">🖥 Display <span>▾</span></div>
+              <div class="spec-field"><div class="spec-field-name">Size</div><div class="spec-field-val">6.7″ OLED</div></div>
+              <div class="spec-field"><div class="spec-field-name">Resolution</div><div class="spec-field-val">2796 × 1290</div></div>
+              <div class="spec-field"><div class="spec-field-name">Refresh rate</div><div class="spec-field-val">ProMotion 120Hz</div></div>
+            </div>
+            <div class="spec-cat">
+              <div class="spec-cat-label">⚡ Processor <span>▾</span></div>
+              <div class="spec-field"><div class="spec-field-name">Chip</div><div class="spec-field-val">A18 Pro</div></div>
+              <div class="spec-field"><div class="spec-field-name">CPU cores</div><div class="spec-field-val">6-core</div></div>
+            </div>
+            <div class="spec-cat">
+              <div class="spec-cat-label">🔋 Battery <span>▾</span></div>
+              <div class="spec-field"><div class="spec-field-name">Video playback</div><div class="spec-field-val">Up to 33 hrs</div></div>
+            </div>
+          </div>
+          <div class="editor-canvas">
+            <div class="canvas-toolbar">
+              <div class="toolbar-btn active">Headline</div>
+              <div class="toolbar-btn">Body</div>
+              <div class="toolbar-btn">Media</div>
+              <div class="toolbar-btn">Spec block</div>
+            </div>
+            <div class="content-block">
+              <div class="block-label">Headline</div>
+              <div class="block-heading">Designed to be remarkable in every light.</div>
+            </div>
+            <div class="content-block">
+              <div class="block-label">Body copy</div>
+              <div class="block-body">A new 48MP camera system with a second-generation quad-pixel sensor captures more light than ever. Whether you're shooting a portrait at dusk or a landscape at dawn, every image reflects the world with breathtaking detail.</div>
+            </div>
+            <div class="content-block">
+              <div class="block-label">Media upload</div>
+              <div class="block-media">Drop hero image here · PNG, JPG, HEIF accepted</div>
+            </div>
+            <div class="content-block" style="border-color:rgba(10,132,255,0.3)">
+              <div class="block-label" style="color:#0a84ff">Spec block — linked</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px">
+                <div style="font-size:11px;color:rgba(255,255,255,0.4)">Camera · 48 MP</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4)">Display · 6.7″</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4)">Chip · A18 Pro</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4)">Battery · 33 hrs</div>
+              </div>
+            </div>
+          </div>
+          <div class="editor-sidebar-r">
+            <div class="ed-section-title">Live preview</div>
+            <div class="preview-mini">
+              <div class="preview-hero-strip"><div class="preview-hero-text">Orion Pro</div></div>
+              <div class="preview-body-strip">
+                <div class="preview-line" style="width:80%"></div>
+                <div class="preview-line" style="width:60%"></div>
+                <div class="preview-line" style="width:90%"></div>
+                <div class="preview-line" style="width:75%"></div>
+              </div>
+            </div>
+            <div style="margin-top:12px">
+              <div class="ed-section-title">Page settings</div>
+              <div class="inspector-field">
+                <div class="inspector-label">Language</div>
+                <div class="inspector-input">English (US) ▾</div>
+              </div>
+              <div class="inspector-field">
+                <div class="inspector-label">Status</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <span class="status-tag tag-draft">Draft</span>
+                  <span class="status-tag tag-review">In Review</span>
+                  <span class="status-tag tag-approved">Approved ✓</span>
+                </div>
+              </div>
+              <div class="inspector-field">
+                <div class="inspector-label">Assignees</div>
+                <div class="team-avatars">
+                  <div class="avatar-mini av1">K</div>
+                  <div class="avatar-mini av2">M</div>
+                  <div class="avatar-mini av3">+3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: PAGE BUILDER -->
+    <div class="screen-block">
+      <div class="screen-title">02 — Page Builder</div>
+      <div class="screen-subtitle">Drag-and-drop canvas with a pre-built module library and live properties inspector.</div>
+      <div class="screen-narrative fade-in">
+        <div class="narrative-col">
+          <div class="narrative-label">Problem</div>
+          <p>Marketing teams needed full control over page layout and composition, but required developer support to make any structural changes — creating bottlenecks close to launch day.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Design Decision</div>
+          <p>A drag-and-drop page builder with a library of pre-built, typed modules. Teams compose pages by placing and ordering modules from the sidebar — no code required.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Outcome</div>
+          <p>Marketing teams can assemble and iterate on complex product pages independently — dramatically reducing round-trips with engineering as launch day approaches.</p>
+        </div>
+      </div>
+      <div class="screen-frame fade-in">
+        <div class="screen-bar">
+          <div class="screen-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <div class="screen-url">content-platform.internal · Products › Orion › Page Builder</div>
+        </div>
+        <div class="builder-shell">
+          <div class="module-library">
+            <div class="ed-section-title" style="margin-bottom:12px">Module Library</div>
+            <div class="module-item"><div class="module-item-name">Hero Banner</div><div class="module-item-desc">Full-width product hero</div></div>
+            <div class="module-item"><div class="module-item-name">Feature Grid</div><div class="module-item-desc">3-col feature highlights</div></div>
+            <div class="module-item"><div class="module-item-name">Spec Table</div><div class="module-item-desc">Technical specifications</div></div>
+            <div class="module-item"><div class="module-item-name">Media Gallery</div><div class="module-item-desc">Image + video carousel</div></div>
+            <div class="module-item"><div class="module-item-name">Quote Block</div><div class="module-item-desc">Editorial pull quote</div></div>
+            <div class="module-item"><div class="module-item-name">CTA Strip</div><div class="module-item-desc">Call-to-action section</div></div>
+          </div>
+          <div class="builder-canvas">
+            <div class="ed-section-title" style="color:rgba(255,255,255,0.25);margin-bottom:10px">Canvas — Orion Pro</div>
+            <div class="canvas-module selected">
+              <div class="canvas-module-label">Hero Banner</div>
+              <div class="module-hero-preview"></div>
+              <div class="drag-handle">⋮⋮</div>
+            </div>
+            <div class="canvas-module">
+              <div class="canvas-module-label">Feature Grid</div>
+              <div class="module-feature-preview">
+                <div class="feature-mini"></div>
+                <div class="feature-mini"></div>
+                <div class="feature-mini"></div>
+              </div>
+              <div class="drag-handle">⋮⋮</div>
+            </div>
+            <div class="canvas-module">
+              <div class="canvas-module-label">Spec Table</div>
+              <div class="module-specs-preview">
+                <div class="spec-mini-row"></div>
+                <div class="spec-mini-row"></div>
+                <div class="spec-mini-row"></div>
+                <div class="spec-mini-row"></div>
+              </div>
+              <div class="drag-handle">⋮⋮</div>
+            </div>
+            <div style="border:1.5px dashed rgba(255,255,255,0.1);border-radius:10px;height:40px;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,0.2);">+ Drop module here</div>
+          </div>
+          <div class="builder-inspector">
+            <div class="ed-section-title" style="margin-bottom:12px">Properties — Hero Banner</div>
+            <div class="inspector-field"><div class="inspector-label">Headline</div><div class="inspector-input">Designed to be...</div></div>
+            <div class="inspector-field"><div class="inspector-label">Background</div><div style="display:flex;gap:6px"><div style="width:24px;height:24px;border-radius:5px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.1)"></div><div style="width:24px;height:24px;border-radius:5px;background:#16213e;border:1px solid rgba(255,255,255,0.1)"></div><div style="width:24px;height:24px;border-radius:5px;background:#0f3460;border:1px solid rgba(255,255,255,0.1)"></div></div></div>
+            <div class="inspector-field"><div class="inspector-label">Layout</div>
+              <div class="inspector-row">
+                <div class="inspector-input">Centered ▾</div>
+                <div class="inspector-input">Large ▾</div>
+              </div>
+            </div>
+            <div class="inspector-field"><div class="inspector-label">Media</div><div style="height:48px;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,0.25);">Drop image</div></div>
+            <div class="inspector-field"><div class="inspector-label">Visibility</div><div class="inspector-input">All locales ▾</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: ASSET MANAGER -->
+    <div class="screen-block">
+      <div class="screen-title">03 — Asset Manager</div>
+      <div class="screen-subtitle">Centralized media library with tagging, filtering, and inline usage tracking.</div>
+      <div class="screen-narrative fade-in">
+        <div class="narrative-col">
+          <div class="narrative-label">Problem</div>
+          <p>Launch assets were stored across multiple systems — shared drives, DAMs, and local machines. Authors wasted time hunting for the right file, and outdated assets occasionally made it into final pages.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Design Decision</div>
+          <p>An integrated asset browser with upload, tagging, and filtering built directly into the platform. Assets are tagged by product, locale, and content type — and usage is tracked across all pages.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Outcome</div>
+          <p>Authors find the right asset in seconds. Usage tracking prevents outdated assets from appearing in approved content — reducing a significant source of pre-launch errors.</p>
+        </div>
+      </div>
+      <div class="screen-frame fade-in">
+        <div class="screen-bar">
+          <div class="screen-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <div class="screen-url">content-platform.internal · Assets</div>
+        </div>
+        <div class="asset-shell">
+          <div class="asset-sidebar">
+            <div class="ed-section-title" style="margin-bottom:12px">Filter by type</div>
+            <div class="asset-filter-item active">All Assets <span class="asset-count">847</span></div>
+            <div class="asset-filter-item">Images <span class="asset-count">512</span></div>
+            <div class="asset-filter-item">Video <span class="asset-count">94</span></div>
+            <div class="asset-filter-item">Icons <span class="asset-count">241</span></div>
+            <div class="ed-section-title" style="margin-top:20px;margin-bottom:12px">Filter by product</div>
+            <div class="asset-filter-item active">Orion Pro</div>
+            <div class="asset-filter-item">Project Vega</div>
+            <div class="asset-filter-item">Project Nova</div>
+            <div class="ed-section-title" style="margin-top:20px;margin-bottom:12px">Filter by locale</div>
+            <div class="asset-filter-item">All locales</div>
+            <div class="asset-filter-item">EN-US</div>
+            <div class="asset-filter-item">JA-JP</div>
+          </div>
+          <div class="asset-main">
+            <div class="asset-toolbar">
+              <div class="asset-search">🔍 Search assets…</div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn-ghost">Sort: Recent ▾</button>
+                <button class="btn-primary">+ Upload</button>
+              </div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-bottom:12px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;">Orion Pro — 143 assets</div>
+            <div class="asset-grid">
+              <div class="asset-thumb selected"><div class="asset-img">📷</div><div class="asset-name">hero_front.png</div></div>
+              <div class="asset-thumb"><div class="asset-img">📷</div><div class="asset-name">camera_close.jpg</div></div>
+              <div class="asset-thumb"><div class="asset-img">🎬</div><div class="asset-name">product_intro.mp4</div></div>
+              <div class="asset-thumb"><div class="asset-img">📷</div><div class="asset-name">display_detail.png</div></div>
+              <div class="asset-thumb"><div class="asset-img">📷</div><div class="asset-name">color_lineup.png</div></div>
+              <div class="asset-thumb"><div class="asset-img">🎨</div><div class="asset-name">icon_chip.svg</div></div>
+              <div class="asset-thumb"><div class="asset-img">📷</div><div class="asset-name">lifestyle_01.jpg</div></div>
+              <div class="asset-thumb"><div class="asset-img">📷</div><div class="asset-name">lifestyle_02.jpg</div></div>
+              <div class="asset-thumb"><div class="asset-img">📷</div><div class="asset-name">box_contents.png</div></div>
+              <div class="asset-thumb"><div class="asset-img">🎨</div><div class="asset-name">icon_battery.svg</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: PUBLISHING WORKFLOW -->
+    <div class="screen-block">
+      <div class="screen-title">04 — Publishing Workflow</div>
+      <div class="screen-subtitle">Status-based pipeline with approval gates, scheduling controls, and audit trail.</div>
+      <div class="screen-narrative fade-in">
+        <div class="narrative-col">
+          <div class="narrative-label">Problem</div>
+          <p>Launch content required multiple approval stages before it could go live, but the process was invisible. Teams couldn't see where content stood, who was blocking, or whether the final schedule was still achievable.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Design Decision</div>
+          <p>A structured pipeline with explicit stages: Editorial Review → Brand Approval → Legal Sign-off → Localization → Scheduled Publish. Every stage has a clear owner, status, and due date.</p>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-label">Outcome</div>
+          <p>Every stakeholder — not just editors — can see exactly where content stands relative to launch day. Blockers surface early, reducing last-minute scrambles and launch-day errors.</p>
+        </div>
+      </div>
+      <div class="screen-frame fade-in">
+        <div class="screen-bar">
+          <div class="screen-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <div class="screen-url">content-platform.internal · Products › Orion › Publishing</div>
+        </div>
+        <div class="publish-shell">
+          <div class="publish-main">
+            <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:18px;">Publishing Pipeline — Project Orion</div>
+            <div class="publish-pipeline">
+              <div class="pipeline-stage"><div class="stage-bar sb-green"></div><div class="stage-content"><div class="stage-name">Editorial Review <span class="stage-badge sb-tag-done">Complete</span></div><div class="stage-meta"><span>Kira M. · Completed 2 days ago</span></div></div></div>
+              <div class="pipeline-stage"><div class="stage-bar sb-green"></div><div class="stage-content"><div class="stage-name">Brand Approval <span class="stage-badge sb-tag-done">Complete</span></div><div class="stage-meta"><span>Marketing Lead · Approved Nov 12</span></div></div></div>
+              <div class="pipeline-stage"><div class="stage-bar sb-blue"></div><div class="stage-content"><div class="stage-name">Legal Sign-off <span class="stage-badge sb-tag-active">In Progress</span></div><div class="stage-meta"><span>Legal Team · Due in 18 hours</span></div></div></div>
+              <div class="pipeline-stage"><div class="stage-bar sb-amber"></div><div class="stage-content"><div class="stage-name">Localization QA <span class="stage-badge sb-tag-pending">Pending Legal</span></div><div class="stage-meta"><span>12 locales · Estimated 4 hours</span></div></div></div>
+              <div class="pipeline-stage"><div class="stage-bar sb-gray"></div><div class="stage-content"><div class="stage-name">Final Engineering Review <span class="stage-badge sb-tag-pending">Pending</span></div><div class="stage-meta"><span>Platform Team · 30 min estimated</span></div></div></div>
+              <div class="pipeline-stage" style="background:rgba(10,132,255,0.05);border-color:rgba(10,132,255,0.15)"><div class="stage-bar sb-blue"></div><div class="stage-content"><div class="stage-name">🚀 Scheduled Publish <span class="stage-badge sb-tag-active">Scheduled</span></div><div class="stage-meta"><span>Nov 16 · 09:00 AM PST · Simultaneous global release</span></div></div></div>
+            </div>
+          </div>
+          <div class="publish-sidebar">
+            <div class="ed-section-title" style="margin-bottom:14px">Launch Summary</div>
+            <div class="publish-stat"><div class="publish-stat-label">Product</div><div class="publish-stat-val">Project Orion Pro</div></div>
+            <div class="publish-stat"><div class="publish-stat-label">Content Readiness</div><div class="publish-stat-val" style="color:#34c759">94%</div></div>
+            <div class="publish-stat"><div class="publish-stat-label">Locales</div><div class="publish-stat-val">12 / 12</div></div>
+            <div class="publish-stat"><div class="publish-stat-label">Approvals</div><div class="publish-stat-val">2 of 5 complete</div></div>
+            <div class="publish-stat"><div class="publish-stat-label">Schedule</div><div class="publish-stat-val">Nov 16, 09:00 PST</div></div>
+            <div class="publish-stat"><div class="publish-stat-label">Status</div><div class="publish-stat-val" style="color:#ff9500">On Track ⚠</div></div>
+            <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05)">
+              <button class="btn-ghost" style="width:100%;margin-bottom:8px;">View Audit Trail</button>
+              <button class="btn-primary" style="width:100%;">Notify Approvers</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ IMPROVED WORKFLOW ═══════════════════════════════ -->
+<section style="background:var(--bg); border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">Redesigned Workflow</div>
+      <h2>From friction to flow</h2>
+      <p>The redesigned workflow eliminated handoff gaps and gave every team member clear, contextual access to exactly what they needed at each stage.</p>
+    </div>
+    <div class="fw-grid fade-in">
+      <div class="fw-step"><div class="fw-circle">1</div><div class="fw-step-name">Create product entry</div></div>
+      <div class="fw-step"><div class="fw-circle">2</div><div class="fw-step-name">Add structured specs</div></div>
+      <div class="fw-step"><div class="fw-circle">3</div><div class="fw-step-name">Assemble with modules</div></div>
+      <div class="fw-step"><div class="fw-circle">4</div><div class="fw-step-name">Attach media assets</div></div>
+      <div class="fw-step"><div class="fw-circle">5</div><div class="fw-step-name">Preview across devices</div></div>
+      <div class="fw-step"><div class="fw-circle">6</div><div class="fw-step-name">Review &amp; approval</div></div>
+      <div class="fw-step"><div class="fw-circle">7</div><div class="fw-step-name">Scheduled publishing</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ IMPACT ═══════════════════════════════ -->
+<section id="impact" style="border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">Impact</div>
+      <h2>Measurable outcomes,<br>meaningful change</h2>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card fade-in">
+        <div class="impact-icon">⚡</div>
+        <div class="impact-headline">Faster content authoring</div>
+        <div class="impact-desc">Structured spec forms with progressive disclosure significantly reduced the time to complete a product entry — eliminating the most time-consuming part of the old workflow.</div>
+      </div>
+      <div class="impact-card fade-in">
+        <div class="impact-icon">🧩</div>
+        <div class="impact-headline">Modular page assembly</div>
+        <div class="impact-desc">The drag-and-drop page builder gave marketing teams a single place to compose product pages, eliminating reliance on external tools and engineering support for structural changes.</div>
+      </div>
+      <div class="impact-card fade-in">
+        <div class="impact-icon">🤝</div>
+        <div class="impact-headline">Clearer team collaboration</div>
+        <div class="impact-desc">Inline module statuses, reviewer assignments, and comment threads reduced miscommunication across marketing, editorial, and legal teams throughout the launch cycle.</div>
+      </div>
+      <div class="impact-card fade-in">
+        <div class="impact-icon">🚀</div>
+        <div class="impact-headline">Reliable launch publishing</div>
+        <div class="impact-desc">A structured publishing pipeline with checklists and approval gates gave all teams confidence that content would go live exactly as intended — with full visibility into status at every stage.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ REFLECTION ═══════════════════════════════ -->
+<section style="background:var(--bg); border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="eyebrow">Reflection</div>
+      <h2>What this project taught me</h2>
+    </div>
+    <div class="reflection-grid">
+      <div class="reflection-card fade-in">
+        <div class="reflection-label">What worked well</div>
+        <p>Structured content models improved consistency more than any visual decision. The moment we defined schemas, every downstream challenge — localization, preview, publishing — became tractable. Constraints freed us from a thousand small ambiguities.</p>
+      </div>
+      <div class="reflection-card fade-in">
+        <div class="reflection-label">What was challenging</div>
+        <p>Designing workflows for multiple teams with conflicting priorities required constant negotiation. The hardest design problems weren't interface problems — they were organizational ones. Making collaboration visible turned out to be as important as any screen.</p>
+      </div>
+      <div class="reflection-card fade-in">
+        <div class="reflection-label">What I'd improve next</div>
+        <p>I'd invest in more automation at the handoff points — especially between localization and review. Content validation rules that run inline before submission would eliminate a whole class of late-stage review cycles. Speed comes from reducing correction, not just authoring.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ CONFIDENTIALITY ═══════════════════════════════ -->
+<section style="padding:72px 0; border-top:1px solid var(--border-light);">
+  <div class="container">
+    <div class="conf-note">
+      <div class="conf-icon">🔒</div>
+      <div class="conf-text"><strong>Confidentiality note.</strong> Due to confidentiality agreements, certain visuals and product details have been modified or recreated for this case study. All UI screens shown are conceptual recreations and do not represent actual unreleased products or internal systems. Information has been changed to protect proprietary details.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="sv-footer">
+  <div class="sv-footer-left">
+    Case Study by <strong>Sourav Vinod</strong> &nbsp;·&nbsp; UX Designer &nbsp;·&nbsp; Apple Inc (Reconstructed Case Study) · 2024–Present
+  </div>
+  <div class="sv-footer-actions">
+    <a href="index.html" class="sv-footer-btn">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+      Back to Portfolio
+    </a>
+    <a href="mailto:souravvinod.ux@gmail.com" class="sv-footer-btn primary">Get in Touch →</a>
+  </div>
+</footer>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav active on scroll
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const sections = document.querySelectorAll('section[id]');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => navObserver.observe(s));
+</script>
+
+<script>
+// Progress bar
+(function() {
+  const bar = document.getElementById('svProgress');
+  if (!bar) return;
+  function update() {
+    const h = document.documentElement;
+    const pct = (window.scrollY / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+// Nav active link highlight
+(function() {
+  const links = document.querySelectorAll('.sv-nav-links a');
+  const ids = Array.from(links).map(a => a.getAttribute('href').replace('#',''));
+  const secs = ids.map(id => document.getElementById(id)).filter(Boolean);
+  function highlight() {
+    const y = window.scrollY + 80;
+    let cur = '';
+    secs.forEach(s => { if (s.offsetTop <= y) cur = s.id; });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttri
